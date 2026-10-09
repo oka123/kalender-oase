@@ -139,6 +139,30 @@ TURNSTILE_SECRET_KEY="0x4AAAAAA..."
 
 ---
 
+## 🔗 Metode Alternatif: Impor Langsung via URL di Google Calendar
+
+Selain menyinkronkan melalui aplikasi web ini, Anda juga dapat menambahkan kalender OASE secara langsung melalui fitur bawaan Google Calendar tanpa memerlukan aplikasi:
+
+### Langkah-Langkah:
+1. Dapatkan URL Kalender OASE Anda dari portal OASE (pastikan berawalan `https://`, jika berawalan `webcal://`, ubah menjadi `https://`).
+2. Buka [Google Calendar](https://calendar.google.com/) di web browser komputer/laptop.
+3. Di panel sebelah kiri, cari bagian **Kalender lain** (*Other calendars*).
+4. Klik tanda tambah (**+**) di sebelah kanan *Kalender lain*, lalu pilih **Dari URL** (*From URL*).
+5. Tempelkan (*paste*) URL Kalender OASE ke dalam kolom **URL kalender**.
+6. Klik **Tambahkan kalender** (*Add calendar*). Google Calendar akan memuat seluruh jadwal kuliah Anda.
+
+### ⚖️ Perbandingan Kedua Metode:
+
+| Fitur / Karakteristik | Aplikasi Web Kalender OASE (Rekomendasi) | Impor Langsung dari URL Google Calendar |
+| :--- | :--- | :--- |
+| **Kecepatan Pembaruan** | **Instan / Real-Time** (Kapan pun disinkronkan langsung ter-update) | **Tertunda 8–24 Jam** (Google memperbarui kalender eksternal secara acak dan lambat) |
+| **Alarm Pengingat (Notifikasi)** | **Otomatis** (Google Alerts H-1 hari, H-2 jam, H-30 menit sebelum batas tugas) | **Tidak Ada** (Google Calendar tidak menyetel notifikasi otomatis pada event feed eksternal) |
+| **Format Judul & Deskripsi** | **Rapi & Bersih** (Menghapus "is due", menyertakan nama mata kuliah & tautan langsung ke tugas OASE) | **Teks Mentah** (Menampilkan format bawaan iCal Moodle) |
+| **Fleksibilitas Target** | Bisa ke kalender khusus (*"OASE UNUD - Akademik"*), Primary, atau kalender pilihan | Menjadi kalender terpisah bertipe *Read-Only Subscription* |
+| **Otomatisasi Latar Belakang** | Mendukung otomatisasi terjadwal via GitHub Actions | Otomatis oleh server Google, namun dengan jeda refresh lama |
+
+---
+
 ## 🤖 Otomatisasi Sinkronisasi Berkala (GitHub Actions)
 
 Aplikasi ini dapat menyinkronkan kalender Anda secara otomatis setiap beberapa jam menggunakan GitHub Actions tanpa server berbayar:
