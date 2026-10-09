@@ -6,10 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --experimental-strip-types --test tests/ical.test.ts tests/sync.test.ts",
+    "sync:cron": "node --experimental-strip-types scripts/sync.ts"
   },
   "dependencies": {
+    "date-fns": "^4.4.0",
+    "googleapis": "^184.0.0",
+    "lucide-react": "^1.52.0",
     "next": "16.4.0",
+    "node-ical": "^0.27.3",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -23,5 +29,5 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@12.6.0"
+  "packageManager": "pnpm@12.10.1"
 }

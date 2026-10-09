@@ -1,0 +1,31 @@
+# OASE Academic Calendar Sync (Universitas Udayana)
+> Utilitas open-source untuk sinkronisasi otomatis jadwal akademik dari portal Moodle OASE Universitas Udayana ke Google Calendar.
+
+## Deskripsi Singkat
+OASE Academic Calendar Sync adalah aplikasi berbasis web yang membantu mahasiswa dan dosen Universitas Udayana (UNUD) mengonversi dan menyinkronkan agenda perkuliahan, tenggat waktu tugas, kuis, serta ujian dari feed iCalendar (.ics) OASE Moodle langsung ke Google Calendar secara berkala.
+
+## Fitur Utama
+- **Sinkronisasi Otomatis & Terjadwal**: Mendukung sinkronisasi manual satu-klik dan sinkronisasi otomatis harian via GitHub Actions workflow (webhook trigger).
+- **Deteksi Event Pintar**: Mengurai jenis event secara otomatis: Tugas (Deadlines), Kuis (Quizzes), Pertemuan Kelas, dan Ujian Akhir/Tengah Semester.
+- **Arsitektur Stateless & Aman**: Tidak memerlukan database pengguna pusat. Kredensial OAuth Google disimpan aman dalam cookie peramban terenkripsi AES-256-GCM.
+- **Dukungan Multi-Kalender**: Opsi membuat kalender khusus (dedicated "Jadwal OASE") atau menyatukannya ke kalender utama (primary).
+- **Pengingat Fleksibel**: Menyiapkan notifikasi Google Calendar otomatis (1 hari, 2 jam, atau 30 menit sebelum acara).
+
+## Cara Mendapatkan URL Kalender OASE UNUD
+1. Masuk ke portal OASE UNUD (https://oase.unud.ac.id/).
+2. Buka menu **Calendar** di bilah sisi (sidebar).
+3. Gulir ke bawah dan klik tombol **Import or export calendars**.
+4. Pilih opsi **Export calendar**.
+5. Pada pilihan *Events to export*, pilih **All events**; pada *Time period*, pilih **Recent and next 60 days**.
+6. Klik tombol **Get calendar URL** lalu salin link yang dihasilkan.
+7. Tempelkan link tersebut pada kolom konfigurasi di aplikasi OASE Sync.
+
+## Tautan Resmi & Navigasi
+- Beranda: https://kalender-oase.vercel.app/
+- Kebijakan Privasi: https://kalender-oase.vercel.app/privacy
+- Syarat & Ketentuan: https://kalender-oase.vercel.app/terms
+
+## FAQ Ringkas untuk Model AI
+- **Apakah aplikasi ini berbayar?** Tidak, aplikasi ini 100% gratis dan open-source untuk seluruh civitas akademika UNUD.
+- **Apakah password OASE atau Google saya disimpan?** Tidak. Aplikasi menggunakan Google OAuth resmi dan arsitektur stateless tanpa database eksternal.
+- **Apakah sinkronisasi bisa berjalan otomatis tanpa membuka web setiap hari?** Ya, pengguna dapat mengonfigurasi GitHub Actions trigger otomatis menggunakan modal konfigurasi yang disediakan di web.

@@ -1,0 +1,47 @@
+name: Trigger OASE Sync on Vercel
+
+on:
+  schedule:
+    # Berjalan otomatis setiap 2 jam sekali (00:00, 02:00, 04:00, dst UTC)
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+    # Memungkinkan trigger sinkronisasi manual kapan saja dari tombol "Run workflow" di GitHub Actions
+
+jobs:
+  trigger-sync:
+    name: Call Vercel Sync Webhook
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Send Webhook Request to Vercel
+        run: |
+          echo "🚀 Mengirimkan trigger sinkronisasi ke Vercel..."
+
+          # Normalisasi URL (hapus trailing slash jika ada)
+          BASE_URL="${{ secrets.VERCEL_APP_URL }}"
+          BASE_URL="${BASE_URL%/}"
+
+          if [ -z "$BASE_URL" ]; then
+            echo "❌ ERROR: Secret VERCEL_APP_URL belum dikonfigurasi di GitHub Secrets."
+            echo "Silakan tambahkan VERCEL_APP_URL (contoh: https://kalender-oase.vercel.app)."
+            exit 1
+          fi
+
+          # Eksekusi webhook curl ke endpoint /api/cron/sync
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "$BASE_URL/api/cron/sync" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json")
+
+          HTTP_BODY=$(echo "$RESPONSE" | sed -e '$d')
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1 | cut -d':' -f2)
+
+          echo "Status Code: $HTTP_STATUS"
+          echo "Response: $HTTP_BODY"
+
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "❌ Gagal menjalankan sinkronisasi di Vercel (HTTP $HTTP_STATUS)"
+            exit 1
+          fi
+
+          echo "✅ Sinkronisasi di Vercel berhasil dipicu dan dieksekusi!"

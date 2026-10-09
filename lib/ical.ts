@@ -1,0 +1,201 @@
+import { sync } from 'node-ical';
+import type { OaseEvent, OaseEventType } from '@/types/calendar';
+
+/**
+ * Normalisasi URL iCal (mengubah webcal:// menjadi https:// dan menghapus spasi ekstra)
+ */
+export function normalizeIcalUrl(rawUrl: string): string {
+  let url = rawUrl.trim();
+  if (url.startsWith('webcal://')) {
+    url = 'https://' + url.slice('webcal://'.length);
+  } else if (url.startsWith('http://') && !url.includes('localhost')) {
+    // Utamakan HTTPS untuk keamanan kecuali localhost
+    url = 'https://' + url.slice('http://'.length);
+  }
+  return url;
+}
+
+/**
+ * Ekstraksi tipe event, judul bersih, dan status deadline dari summary Moodle
+ */
+export function parseEventSummary(rawSummary: string): {
+  cleanTitle: string;
+  eventType: OaseEventType;
+  isDeadline: boolean;
+} {
+  const summary = (rawSummary || 'Untitled Event').trim();
+  let cleanTitle = summary;
+  let isDeadline = false;
+  let eventType: OaseEventType = 'general';
+
+  // Deteksi penanda due date Moodle
+  const dueSuffixMatch = summary.match(/^(.*?)\s+is due$/i);
+  if (dueSuffixMatch) {
+    cleanTitle = dueSuffixMatch[1].trim();
+    isDeadline = true;
+  } else if (/closes$/i.test(summary)) {
+    isDeadline = true;
+  }
+
+  const lowerTitle = summary.toLowerCase();
+
+  // Klasifikasi kategori event
+  if (lowerTitle.includes('uts') || lowerTitle.includes('uas') || lowerTitle.includes('ujian')) {
+    eventType = 'exam';
+  } else if (lowerTitle.includes('kuis') || lowerTitle.includes('quiz')) {
+    eventType = 'quiz';
+  } else if (
+    isDeadline ||
+    lowerTitle.includes('tugas') ||
+    lowerTitle.includes('laporan') ||
+    lowerTitle.includes('review') ||
+    lowerTitle.includes('pengumpulan') ||
+    lowerTitle.includes('case solving')
+  ) {
+    eventType = 'assignment';
+  } else if (lowerTitle.includes('diskusi') || lowerTitle.includes('forum')) {
+    eventType = 'discussion';
+  }
+
+  return { cleanTitle, eventType, isDeadline };
+}
+
+/**
+ * Ekstraksi link dan pembersihan format deskripsi Moodle iCal
+ */
+export function parseEventDescription(rawDescription: string): {
+  cleanDescription: string;
+  links: { label: string; url: string }[];
+  primaryUrl?: string;
+} {
+  if (!rawDescription) {
+    return { cleanDescription: '', links: [] };
+  }
+
+  const links: { label: string; url: string }[] = [];
+  const text = rawDescription.replace(/\u00a0/g, ' ').trim();
+
+  // Regex mencari format Moodle: [1] https://... atau [2] https://...
+  const moodleLinkRegex = /\[(\d+)\]\s+(https?:\/\/[^\s]+)/g;
+  let match: RegExpExecArray | null;
+  while ((match = moodleLinkRegex.exec(text)) !== null) {
+    const label = `Link [${match[1]}]`;
+    const url = match[2].trim().replace(/&amp;/g, '&');
+    links.push({ label, url });
+  }
+
+  // Cari URL umum lainnya jika belum ada link yang terdeteksi
+  if (links.length === 0) {
+    const generalUrlRegex = /(https?:\/\/[^\s]+)/g;
+    let urlMatch: RegExpExecArray | null;
+    let counter = 1;
+    while ((urlMatch = generalUrlRegex.exec(text)) !== null) {
+      const url = urlMatch[1].trim().replace(/&amp;/g, '&');
+      links.push({ label: `Link ${counter++}`, url });
+    }
+  }
+
+  // Tentukan primary URL (prioritaskan URL OASE UNUD)
+  const oaseLink = links.find((l) => l.url.includes('oase.unud.ac.id'));
+  const primaryUrl = oaseLink ? oaseLink.url : links[0]?.url;
+
+  // Bersihkan bagian blok "Links:\n------\n" dari deskripsi utama
+  const cleanDescription = text
+    .split(/Links:\s*------/i)[0]
+    .trim()
+    .replace(/\t/g, ' ')
+    .replace(/\n{3,}/g, '\n\n');
+
+  return {
+    cleanDescription,
+    links,
+    primaryUrl,
+  };
+}
+
+/**
+ * Parse isi teks file iCalendar (.ics) menjadi array OaseEvent
+ */
+export function parseIcalData(icsContent: string): OaseEvent[] {
+  if (!icsContent || typeof icsContent !== 'string') {
+    throw new Error('Konten iCal kosong atau tidak valid.');
+  }
+
+  const parsed = sync.parseICS(icsContent);
+  const events: OaseEvent[] = [];
+
+  for (const key of Object.keys(parsed)) {
+    const item = parsed[key];
+    if (!item || item.type !== 'VEVENT') continue;
+
+    const summary = typeof item.summary === 'string' ? item.summary : '';
+    const description = typeof item.description === 'string' ? item.description : '';
+    const categories = item.categories as unknown;
+    let courseName = 'Umum';
+    if (Array.isArray(categories)) {
+      courseName = categories.join(', ');
+    } else if (typeof categories === 'string') {
+      courseName = categories.trim() || 'Umum';
+    }
+
+    const { cleanTitle, eventType, isDeadline } = parseEventSummary(summary);
+    const { cleanDescription, links, primaryUrl } = parseEventDescription(description);
+
+    const startDate = item.start ? new Date(item.start) : new Date();
+    let endDate = item.end ? new Date(item.end) : new Date(startDate.getTime());
+
+    // Jika waktu awal dan akhir sama (point in time deadline), berikan durasi default 30 menit
+    if (startDate.getTime() === endDate.getTime()) {
+      endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
+    }
+
+    const lastModified = item.lastmodified ? new Date(item.lastmodified) : undefined;
+
+    events.push({
+      uid: item.uid || key,
+      summary,
+      cleanTitle,
+      description,
+      cleanDescription,
+      courseName,
+      eventType,
+      start: startDate,
+      end: endDate,
+      isDeadline,
+      url: primaryUrl,
+      links,
+      lastModified,
+    });
+  }
+
+  // Urutkan berdasarkan tanggal start terdekat
+  return events.sort((a, b) => a.start.getTime() - b.start.getTime());
+}
+
+/**
+ * Ambil feed iCal dari URL dan parse ke bentuk OaseEvent[]
+ */
+export async function fetchAndParseIcal(rawUrl?: string): Promise<OaseEvent[]> {
+  const targetUrl = rawUrl || process.env.OASE_ICAL_URL;
+  if (!targetUrl) {
+    throw new Error('URL iCal OASE belum dikonfigurasi. Silakan isi URL di konfigurasi atau environment variable OASE_ICAL_URL.');
+  }
+
+  const normalizedUrl = normalizeIcalUrl(targetUrl);
+
+  const response = await fetch(normalizedUrl, {
+    headers: {
+      'User-Agent': 'OASE-Academic-Calendar-Sync/1.0',
+      'Accept': 'text/calendar, text/plain, */*',
+    },
+    // Cache sebentar untuk mencegah spam request berulang ke server OASE
+    next: { revalidate: 60 },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Gagal mengambil data dari server OASE: ${response.status} ${response.statusText}`);
+  }
+
+  const icsText = await response.text();
+  return parseIcalData(icsText);
+}
