@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createOAuth2Client, getUserProfile } from '@/lib/google';
-import { saveSession } from '@/lib/session';
+import { getSession, saveSession } from '@/lib/session';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -50,8 +50,14 @@ export async function GET(request: Request) {
       // Profil opsional jika gagal diambil
     }
 
+    const existingSession = await getSession();
+    const finalTokens = {
+      ...tokens,
+      refresh_token: tokens.refresh_token || existingSession?.tokens?.refresh_token,
+    };
+
     await saveSession({
-      tokens,
+      tokens: finalTokens,
       email: profile.email,
       name: profile.name,
       picture: profile.picture,

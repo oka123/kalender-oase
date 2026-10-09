@@ -8,19 +8,24 @@ const SCOPES = [
   'https://www.googleapis.com/auth/userinfo.profile',
 ];
 
+function cleanEnv(val?: string | null): string {
+  if (!val) return '';
+  return val.trim().replace(/^["']|["']$/g, '').trim();
+}
+
 /**
  * Buat instance OAuth2 client Google
  */
 export function createOAuth2Client(redirectUri?: string) {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const configuredRedirectUri = redirectUri || process.env.GOOGLE_REDIRECT_URI;
+  const clientId = cleanEnv(process.env.GOOGLE_CLIENT_ID);
+  const clientSecret = cleanEnv(process.env.GOOGLE_CLIENT_SECRET);
+  const configuredRedirectUri = cleanEnv(redirectUri || process.env.GOOGLE_REDIRECT_URI);
 
   if (!clientId || !clientSecret) {
     throw new Error('GOOGLE_CLIENT_ID atau GOOGLE_CLIENT_SECRET belum dikonfigurasi di environment variables.');
   }
 
-  return new google.auth.OAuth2(clientId, clientSecret, configuredRedirectUri);
+  return new google.auth.OAuth2(clientId, clientSecret, configuredRedirectUri || undefined);
 }
 
 /**
@@ -43,9 +48,10 @@ export function getAuthorizationUrl(redirectUri?: string, state?: string): strin
 export async function getAuthenticatedOAuth2Client(explicitRefreshToken?: string) {
   // 1. Jika ada token eksplisit yang diberikan (misal dari script/cron tertentu)
   if (explicitRefreshToken) {
+    const cleanedToken = cleanEnv(explicitRefreshToken);
     const oauth2Client = createOAuth2Client();
     oauth2Client.setCredentials({
-      refresh_token: explicitRefreshToken,
+      refresh_token: cleanedToken,
     });
     return oauth2Client;
   }
@@ -78,7 +84,7 @@ export async function getAuthenticatedOAuth2Client(explicitRefreshToken?: string
   }
 
   // 3. Fallback ke environment variable (berguna untuk background cron job tanpa sesi cookie)
-  const envRefreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+  const envRefreshToken = cleanEnv(process.env.GOOGLE_REFRESH_TOKEN);
   if (envRefreshToken) {
     const oauth2Client = createOAuth2Client();
     oauth2Client.setCredentials({
