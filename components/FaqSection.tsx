@@ -12,7 +12,7 @@ const FAQS: FaqItem[] = [
   {
     question: "Apa itu Kalender OASE Universitas Udayana?",
     answer:
-      "Kalender OASE adalah aplikasi utilitas sumber terbuka yang menghubungkan sistem pembelajaran daring OASE Moodle Universitas Udayana ke Google Calendar. Aplikasi ini mengekstrak feed iCal resmi untuk menyinkronkan jadwal tugas, kuis, dan ujian secara otomatis dan terjadwal.",
+      "Kalender OASE adalah aplikasi yang menghubungkan sistem pembelajaran daring OASE Moodle Universitas Udayana ke Google Calendar. Aplikasi ini mengekstrak kalender untuk menyinkronkan jadwal tugas, kuis, dan ujian secara otomatis dan terjadwal.",
   },
   {
     question: "Bagaimana cara mendapatkan URL Kalender dari OASE UNUD?",
@@ -22,22 +22,25 @@ const FAQS: FaqItem[] = [
   {
     question: "Apakah sinkronisasi kalender OASE ini aman dan menjaga privasi?",
     answer:
-      "Sangat aman. Aplikasi menerapkan arsitektur stateless tanpa database pengguna terpusat. Kredensial Google disimpan dalam cookie terenkripsi kuat menggunakan algoritma AES-256-GCM pada peramban Anda. Kami tidak pernah menyimpan kata sandi OASE maupun akun Google Anda.",
+      "Sangat aman. Aplikasi menerapkan arsitektur stateless tanpa database. Kredensial Google disimpan dalam cookie terenkripsi kuat menggunakan algoritma AES-256-GCM pada peramban Anda. Kami tidak pernah menyimpan kata sandi OASE maupun akun Google Anda.",
   },
   {
-    question: "Bisakah kalender OASE tersinkronisasi otomatis tanpa harus buka web setiap hari?",
+    question:
+      "Bisakah kalender OASE tersinkronisasi otomatis tanpa harus buka web setiap hari?",
     answer:
-      "Bisa. Anda dapat mengaktifkan GitHub Actions gratis menggunakan workflow webhook yang telah kami sediakan di menu 'Otomatisasi GitHub'. GitHub Actions akan memicu sinkronisasi kalender setiap hari secara terjadwal di latar belakang.",
+      "Bisa. Anda dapat mengaktifkan GitHub Actions gratis menggunakan workflow webhook yang telah kami sediakan di menu 'Github Actions'. GitHub Actions akan memicu sinkronisasi kalender setiap hari secara terjadwal.",
   },
   {
-    question: "Apakah jadwal kuliah di Google Calendar akan bertumpuk atau terduplikasi?",
+    question:
+      "Apakah jadwal kuliah di Google Calendar akan bertumpuk atau terduplikasi?",
     answer:
-      "Tidak. Sistem sinkronisasi bersifat idempoten dan cerdas. Agenda yang sudah ada akan diperbarui jika terjadi revisi waktu dari dosen, agenda baru akan ditambahkan, dan agenda lama yang tidak berubah tidak akan diduplikasi.",
+      "Tidak. Jadwal yang sudah ada akan diperbarui jika terjadi perubahan waktu oleh dosen, jadwal baru akan ditambahkan, dan jadwal lama yang tidak berubah tidak akan diduplikasi.",
   },
   {
-    question: "Apakah aplikasi ini resmi dibuat oleh pihak Universitas Udayana?",
+    question:
+      "Apakah aplikasi ini resmi dibuat oleh pihak Universitas Udayana?",
     answer:
-      "Aplikasi ini merupakan proyek independen sumber terbuka yang dikembangkan oleh mahasiswa untuk membantu sivitas akademika Universitas Udayana. Aplikasi ini tidak berafiliasi resmi secara komersial dengan Universitas Udayana maupun Google LLC.",
+      "Aplikasi ini merupakan proyek yang dikembangkan oleh mahasiswa untuk membantu sivitas Universitas Udayana. Aplikasi ini tidak berafiliasi resmi dengan Universitas Udayana maupun Google LLC.",
   },
 ];
 

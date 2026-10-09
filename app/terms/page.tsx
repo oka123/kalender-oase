@@ -56,9 +56,9 @@ export default function TermsOfServicePage() {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Terms of Service (Syarat dan Ketentuan)
             </h1>
-            {/* <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500">
               Terakhir diperbarui: 9 Oktober 2026
-            </p> */}
+            </p>
           </div>
 
           {/* Section 1: Penerimaan Ketentuan */}
@@ -84,10 +84,9 @@ export default function TermsOfServicePage() {
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
               Kalender OASE adalah aplikasi utilitas non-komersial
-              sumber terbuka yang dirancang untuk memfasilitasi sinkronisasi jadwal
+              yang dirancang untuk memfasilitasi sinkronisasi jadwal
               akademik (seperti deadline tugas, kuis, dan ujian) dari feed iCalendar
-              portal pembelajaran daring OASE Universitas Udayana ke akun Google
-              Calendar pribadi milik pengguna.
+              portal OASE Universitas Udayana ke akun Google Calendar pribadi pengguna.
             </p>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
               <div className="flex items-center gap-2 text-slate-800 font-semibold text-sm">
@@ -95,10 +94,10 @@ export default function TermsOfServicePage() {
                 <span>Fitur Utama Layanan:</span>
               </div>
               <ul className="list-disc pl-6 space-y-1 text-sm text-slate-600">
-                <li>Penguraian otomatis jadwal dari link export OASE Moodle (.ics).</li>
+                <li>Sinkronisasi otomatis jadwal dari link export OASE Moodle (.ics).</li>
                 <li>Pembuatan dan pembaruan agenda secara rapi di Google Calendar.</li>
-                <li>Pengaturan pengingat notifikasi (reminders) otomatis sebelum tenggat waktu.</li>
-                <li>Dukungan otomatisasi sinkronisasi berkala via GitHub Actions trigger.</li>
+                <li>Pengaturan notifikasi pengingat sebelum tenggat waktu.</li>
+                <li>Dukungan sinkronisasi otomatis terjadwal via GitHub Actions.</li>
               </ul>
             </div>
           </section>
@@ -114,12 +113,12 @@ export default function TermsOfServicePage() {
             </p>
             <ul className="list-disc pl-6 space-y-2 text-sm text-slate-600 leading-relaxed">
               <li>
-                Menjaga kerahasiaan URL Kalender OASE iCal pribadi Anda karena URL
-                tersebut memuat token akses unik ke jadwal kuliah Anda di Moodle.
+                Menjaga kerahasiaan URL Kalender iCal pribadi Anda karena URL
+                tersebut memuat token akses unik ke jadwal kuliah Anda di OASE.
               </li>
               <li>
-                Hanya menggunakan Layanan untuk kalender akademik sah milik Anda
-                sendiri atau kelas perkuliahan Anda yang berwenang.
+                Hanya menggunakan Layanan untuk kalender akademik milik Anda
+                sendiri atau kelas perkuliahan Anda yang sah.
               </li>
               <li>
                 Tidak menggunakan Layanan untuk tujuan yang melanggar hukum, merusak
@@ -133,7 +132,7 @@ export default function TermsOfServicePage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#001d62]"></span>
-              4. Penafian Afiliasi Resmi (Independent Project Disclaimer)
+              4. Penafian Afiliasi (Disclaimer)
             </h2>
             <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-4 sm:p-5 space-y-2">
               <div className="flex items-center gap-2 text-amber-900 font-semibold text-sm">
@@ -142,7 +141,7 @@ export default function TermsOfServicePage() {
               </div>
               <p className="text-sm text-amber-800 leading-relaxed">
                 Layanan ini merupakan proyek perangkat lunak independen yang
-                dikembangkan oleh mahasiswa/kontributor open-source. Layanan ini{" "}
+                dikembangkan oleh mahasiswa. Layanan ini{" "}
                 <strong>TIDAK</strong> berafiliasi resmi, didukung oleh, atau
                 merupakan representasi dari Universitas Udayana maupun Google LLC.
                 Nama OASE, Universitas Udayana, dan Google Calendar digunakan
@@ -155,26 +154,25 @@ export default function TermsOfServicePage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#001d62]"></span>
-              5. Penafian Jaminan &amp; Batasan Tanggung Jawab
+              5. Batasan Tanggung Jawab
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
               LAYANAN DISEDIAKAN &quot;SEBAGAIMANA ADANYA&quot; (<em>AS IS</em>) DAN
               &quot;SEBAGAIMANA TERSEDIA&quot; (<em>AS AVAILABLE</em>) TANPA JAMINAN
-              DALAM BENTUK APA PUN, BAIK TERSURAT MAUPUN TERSIRAT.
+              DALAM BENTUK APA PUN.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
               Pengembang tidak bertanggung jawab atas:
             </p>
             <ul className="list-disc pl-6 space-y-1.5 text-sm text-slate-600 leading-relaxed">
               <li>
-                Keterlambatan, kegagalan, atau kekeliruan pengumpulan tugas kuliah
-                akibat kesalahan sinkronisasi atau perubahan jadwal mendadak oleh dosen.
+                Keterlambatan atau kekeliruan pengumpulan tugas kuliah akibat perbedaan waktu atau perubahan jadwal mendadak oleh dosen.
               </li>
               <li>
                 Gangguan ketersediaan pada server OASE Moodle atau Google Calendar API.
               </li>
               <li>
-                Kerusakan atau kehilangan agenda kalender di luar kendali wajar perangkat lunak.
+                Kerusakan atau kehilangan agenda kalender di luar kendali wajar aplikasi.
               </li>
             </ul>
             <p className="text-sm text-slate-600 leading-relaxed">
@@ -187,14 +185,13 @@ export default function TermsOfServicePage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#001d62]"></span>
-              6. Perubahan pada Ketentuan Layanan
+              6. Perubahan Ketentuan Layanan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Kami berhak untuk memperbarui atau memodifikasi Syarat dan Ketentuan ini
-              sewaktu-waktu. Perubahan akan berlaku efektif setelah ketentuan baru
-              dipublikasikan pada halaman ini. Penggunaan berkelanjutan Anda atas
-              Layanan ini setelah pembaruan menandakan persetujuan Anda terhadap
-              ketentuan yang diperbarui.
+              Kami dapat memperbarui Syarat dan Ketentuan ini sewaktu-waktu.
+              Perubahan berlaku efektif setelah dipublikasikan pada halaman ini.
+              Penggunaan berkelanjutan atas Layanan ini menandakan persetujuan Anda
+              terhadap ketentuan yang diperbarui.
             </p>
           </section>
 
@@ -202,12 +199,11 @@ export default function TermsOfServicePage() {
           <section className="space-y-3 border-t border-slate-200 pt-6">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-slate-600" />
-              7. Pertanyaan &amp; Kontak
+              7. Kontak &amp; Dukungan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
               Jika Anda memiliki pertanyaan mengenai Ketentuan Layanan ini, silakan
-              buat isu (issue) melalui repositori GitHub resmi proyek Kalender
-              OASE atau hubungi pengembang.
+              hubungi tim pengembang melalui repositori GitHub resmi Kalender OASE.
             </p>
           </section>
         </div>
