@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { checkRateLimit, getClientIp } from '../lib/rate-limit.ts';
 import { verifyTurnstileToken } from '../lib/captcha.ts';
 import { validateAndNormalizeIcalUrl } from '../lib/ical.ts';
+import { getBaseUrl } from '../lib/site.ts';
 
 test('Rate Limiter: enforces sliding window and blocks excessive requests', () => {
   const rule = { windowMs: 1000, maxRequests: 3 };
@@ -79,4 +80,32 @@ test('SSRF Protection: validateAndNormalizeIcalUrl rejects disallowed hostnames 
   assert.throws(() => validateAndNormalizeIcalUrl('file:///etc/passwd'));
   assert.throws(() => validateAndNormalizeIcalUrl('javascript:alert(1)'));
   assert.throws(() => validateAndNormalizeIcalUrl('https://evil-attacker.com/malicious.ics'));
+});
+
+test('SEO & Site URL: getBaseUrl resolves valid domain and ignores localhost in production', () => {
+  const originalAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const originalVercelProd = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+
+  try {
+    // 1. Abaikan localhost
+    process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000';
+    delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    assert.equal(getBaseUrl(), 'https://kalender-oase.vercel.app');
+
+    // 2. Gunakan custom valid domain
+    process.env.NEXT_PUBLIC_APP_URL = 'https://oase-calendar.my.id/';
+    assert.equal(getBaseUrl(), 'https://oase-calendar.my.id');
+
+    // 3. Gunakan Vercel production url otomatis
+    delete process.env.NEXT_PUBLIC_APP_URL;
+    process.env.VERCEL_PROJECT_PRODUCTION_URL = 'kalender-oase-production.vercel.app';
+    assert.equal(getBaseUrl(), 'https://kalender-oase-production.vercel.app');
+  } finally {
+    process.env.NEXT_PUBLIC_APP_URL = originalAppUrl;
+    if (originalVercelProd) {
+      process.env.VERCEL_PROJECT_PRODUCTION_URL = originalVercelProd;
+    } else {
+      delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    }
+  }
 });

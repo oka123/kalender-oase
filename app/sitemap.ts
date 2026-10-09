@@ -1,12 +1,13 @@
 import type { MetadataRoute } from 'next';
+import { getBaseUrl } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://kalender-oase.vercel.app';
-  const currentDate = new Date('2026-10-09T00:00:00.000Z');
+  const baseUrl = getBaseUrl();
+  const currentDate = new Date();
 
   return [
     {
-      url: `${baseUrl}/`,
+      url: `${baseUrl}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 1.0,
@@ -15,13 +16,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/privacy`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/terms`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.7,
     },
   ];
 }

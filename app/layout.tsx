@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
+import { getBaseUrl } from '@/lib/site';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -12,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://kalender-oase.vercel.app';
+const baseUrl = getBaseUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
