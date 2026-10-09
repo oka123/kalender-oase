@@ -142,12 +142,7 @@ export function parseIcalData(icsContent: string): OaseEvent[] {
     const { cleanDescription, links, primaryUrl } = parseEventDescription(description);
 
     const startDate = item.start ? new Date(item.start) : new Date();
-    let endDate = item.end ? new Date(item.end) : new Date(startDate.getTime());
-
-    // Jika waktu awal dan akhir sama (point in time deadline), berikan durasi default 30 menit
-    if (startDate.getTime() === endDate.getTime()) {
-      endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
-    }
+    const endDate = item.end ? new Date(item.end) : new Date(startDate.getTime());
 
     const lastModified = item.lastmodified ? new Date(item.lastmodified) : undefined;
 

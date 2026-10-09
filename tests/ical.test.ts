@@ -80,6 +80,6 @@ test('parseIcalData parses sample Moodle iCal content successfully', () => {
   assert.equal(firstEvent.isDeadline, true);
   assert.ok(firstEvent.url?.includes('oase.unud.ac.id'));
 
-  // Pastikan durasi default 30 menit diberikan jika start == end
-  assert.ok(firstEvent.end.getTime() > firstEvent.start.getTime());
+  // Pastikan waktu start dan end sama persis untuk deadline point-in-time agar Google Calendar menampilkan waktu tepat (bukan rentang waktu)
+  assert.equal(firstEvent.end.getTime(), firstEvent.start.getTime());
 });
