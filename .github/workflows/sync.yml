@@ -16,14 +16,14 @@ jobs:
     steps:
       - name: Send Webhook Request to Vercel
         run: |
-          echo "🚀 Mengirimkan trigger sinkronisasi ke Vercel..."
+          echo "Mengirimkan trigger sinkronisasi ke Vercel..."
 
           # Normalisasi URL (hapus trailing slash jika ada)
           BASE_URL="${{ secrets.VERCEL_APP_URL }}"
           BASE_URL="${BASE_URL%/}"
 
           if [ -z "$BASE_URL" ]; then
-            echo "❌ ERROR: Secret VERCEL_APP_URL belum dikonfigurasi di GitHub Secrets."
+            echo "ERROR: Secret VERCEL_APP_URL belum dikonfigurasi di GitHub Secrets."
             echo "Silakan tambahkan VERCEL_APP_URL (contoh: https://kalender-oase.vercel.app)."
             exit 1
           fi
@@ -40,8 +40,8 @@ jobs:
           echo "Response: $HTTP_BODY"
 
           if [ "$HTTP_STATUS" -ne 200 ]; then
-            echo "❌ Gagal menjalankan sinkronisasi di Vercel (HTTP $HTTP_STATUS)"
+            echo "Gagal menjalankan sinkronisasi di Vercel (HTTP $HTTP_STATUS)"
             exit 1
           fi
 
-          echo "✅ Sinkronisasi di Vercel berhasil dipicu dan dieksekusi!"
+          echo "Sinkronisasi di Vercel berhasil dipicu dan dieksekusi!"
