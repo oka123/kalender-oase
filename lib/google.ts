@@ -24,15 +24,16 @@ export function createOAuth2Client(redirectUri?: string) {
 }
 
 /**
- * Generate authorization URL untuk user login ke Google
+ * Generate authorization URL untuk user login ke Google dengan dukungan proteksi state CSRF
  */
-export function getAuthorizationUrl(redirectUri?: string): string {
+export function getAuthorizationUrl(redirectUri?: string, state?: string): string {
   const oauth2Client = createOAuth2Client(redirectUri);
 
   return oauth2Client.generateAuthUrl({
     access_type: 'offline', // Meminta refresh_token
     prompt: 'consent', // Memastikan refresh_token selalu dikembalikan
     scope: SCOPES,
+    ...(state ? { state } : {}),
   });
 }
 
@@ -40,42 +41,53 @@ export function getAuthorizationUrl(redirectUri?: string): string {
  * Dapatkan authenticated OAuth2 client dari session yang tersimpan atau dari refresh token
  */
 export async function getAuthenticatedOAuth2Client(explicitRefreshToken?: string) {
-  const refreshToken = explicitRefreshToken || process.env.GOOGLE_REFRESH_TOKEN;
-  if (refreshToken) {
+  // 1. Jika ada token eksplisit yang diberikan (misal dari script/cron tertentu)
+  if (explicitRefreshToken) {
     const oauth2Client = createOAuth2Client();
     oauth2Client.setCredentials({
-      refresh_token: refreshToken,
+      refresh_token: explicitRefreshToken,
     });
     return oauth2Client;
   }
 
+  // 2. Prioritaskan sesi pengguna yang sedang login di browser
   const session = await getSession();
-  if (!session || !session.tokens) {
-    return null;
+  if (session && session.tokens) {
+    const oauth2Client = createOAuth2Client();
+    oauth2Client.setCredentials({
+      access_token: session.tokens.access_token || undefined,
+      refresh_token: session.tokens.refresh_token || undefined,
+      scope: session.tokens.scope || undefined,
+      token_type: session.tokens.token_type || undefined,
+      expiry_date: session.tokens.expiry_date || undefined,
+    });
+
+    // Pasang event listener untuk memperbarui session saat token diperbarui otomatis oleh googleapis
+    oauth2Client.on('tokens', async (newTokens) => {
+      const updatedSession: GoogleSessionData = {
+        ...session,
+        tokens: {
+          ...session.tokens,
+          ...newTokens,
+        },
+      };
+      await saveSession(updatedSession);
+    });
+
+    return oauth2Client;
   }
 
-  const oauth2Client = createOAuth2Client();
-  oauth2Client.setCredentials({
-    access_token: session.tokens.access_token || undefined,
-    refresh_token: session.tokens.refresh_token || undefined,
-    scope: session.tokens.scope || undefined,
-    token_type: session.tokens.token_type || undefined,
-    expiry_date: session.tokens.expiry_date || undefined,
-  });
+  // 3. Fallback ke environment variable (berguna untuk background cron job tanpa sesi cookie)
+  const envRefreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+  if (envRefreshToken) {
+    const oauth2Client = createOAuth2Client();
+    oauth2Client.setCredentials({
+      refresh_token: envRefreshToken,
+    });
+    return oauth2Client;
+  }
 
-  // Pasang event listener untuk memperbarui session saat token diperbarui otomatis oleh googleapis
-  oauth2Client.on('tokens', async (newTokens) => {
-    const updatedSession: GoogleSessionData = {
-      ...session,
-      tokens: {
-        ...session.tokens,
-        ...newTokens,
-      },
-    };
-    await saveSession(updatedSession);
-  });
-
-  return oauth2Client;
+  return null;
 }
 
 /**

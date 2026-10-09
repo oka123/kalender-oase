@@ -1,21 +1,34 @@
 import { NextResponse } from 'next/server';
+import crypto from 'node:crypto';
 import { syncOaseToGoogleCalendar } from '@/lib/sync';
+
+function timingSafeCompare(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
 
 async function handleCronSync(request: Request) {
   try {
     const cronSecret = process.env.CRON_SECRET;
-    
-    // Verifikasi Authorization Header jika CRON_SECRET dikonfigurasi
-    if (cronSecret) {
-      const authHeader = request.headers.get('authorization');
-      const expectedAuth = `Bearer ${cronSecret}`;
 
-      if (authHeader !== expectedAuth) {
-        return NextResponse.json(
-          { error: 'Tidak diizinkan: Kredensial CRON_SECRET tidak valid atau tidak cocok.' },
-          { status: 401 }
-        );
-      }
+    // Fail-Closed: Tolak eksekusi jika CRON_SECRET belum dikonfigurasi di server
+    if (!cronSecret) {
+      return NextResponse.json(
+        { error: 'Konfigurasi server belum lengkap: CRON_SECRET wajib disetel untuk mengamankan endpoint cron webhook.' },
+        { status: 500 }
+      );
+    }
+
+    const authHeader = request.headers.get('authorization') || '';
+    const expectedAuth = `Bearer ${cronSecret}`;
+
+    if (!timingSafeCompare(authHeader, expectedAuth)) {
+      return NextResponse.json(
+        { error: 'Tidak diizinkan: Kredensial Authorization CRON_SECRET tidak valid atau tidak cocok.' },
+        { status: 401 }
+      );
     }
 
     const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;

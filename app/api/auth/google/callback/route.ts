@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createOAuth2Client, getUserProfile } from '@/lib/google';
 import { saveSession } from '@/lib/session';
 
@@ -6,11 +7,26 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
   const error = requestUrl.searchParams.get('error');
+  const state = requestUrl.searchParams.get('state');
 
   const origin = requestUrl.origin;
 
   if (error) {
     return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent(error)}`);
+  }
+
+  // Validasi proteksi CSRF state
+  const cookieStore = await cookies();
+  const savedStateCookie = cookieStore.get('oase_oauth_state');
+  const savedState = savedStateCookie?.value;
+
+  // Hapus cookie state (one-time token)
+  cookieStore.delete('oase_oauth_state');
+
+  if (!state || !savedState || state !== savedState) {
+    return NextResponse.redirect(
+      `${origin}/?auth_error=${encodeURIComponent('Validasi keamanan sesi gagal (OAuth State CSRF mismatch). Silakan ulangi proses login.')}`
+    );
   }
 
   if (!code) {

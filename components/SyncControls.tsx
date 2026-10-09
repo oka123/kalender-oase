@@ -10,8 +10,11 @@ import {
   Sparkles,
   Layers,
   ArrowRight,
+  ExternalLink,
+  ShieldAlert,
 } from "lucide-react";
 import type { GoogleCalendarItem, SyncResult } from "@/types/calendar";
+import { SecurityCaptcha, type CaptchaState } from "./SecurityCaptcha";
 
 interface SyncControlsProps {
   isAuthenticated: boolean;
@@ -20,6 +23,7 @@ interface SyncControlsProps {
     calendarId: string;
     createDedicatedCalendar: boolean;
     reminderMinutes: number[];
+    turnstileToken?: string;
   }) => Promise<void>;
   isSyncing: boolean;
   syncResult: SyncResult | null;
@@ -42,10 +46,17 @@ export function SyncControls({
   const [reminder1Day, setReminder1Day] = useState(true);
   const [reminder2Hours, setReminder2Hours] = useState(true);
   const [reminder30Mins, setReminder30Mins] = useState(false);
+  const [captchaState, setCaptchaState] = useState<CaptchaState>({
+    isVerified: false,
+  });
 
   const handleStartSync = async () => {
     if (!isAuthenticated) {
       onLoginRequest();
+      return;
+    }
+
+    if (!captchaState.isVerified) {
       return;
     }
 
@@ -65,11 +76,12 @@ export function SyncControls({
       calendarId: targetId,
       createDedicatedCalendar: isDedicated,
       reminderMinutes: reminders,
+      turnstileToken: captchaState.turnstileToken,
     });
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-6">
+    <div id="sync-controls" className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-6 scroll-mt-20">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
         <div>
           <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
@@ -244,28 +256,44 @@ export function SyncControls({
         </div>
       </div>
 
-      {/* Action Sync Button */}
-      <div className="pt-2">
+      {/* Proteksi Keamanan Bot / DDoS & Tombol Aksi Sinkronisasi */}
+      <div className="pt-2 space-y-4">
+        {isAuthenticated && (
+          <SecurityCaptcha onVerifyChange={setCaptchaState} />
+        )}
+
         {isAuthenticated ? (
-          <button
-            type="button"
-            onClick={handleStartSync}
-            disabled={isSyncing}
-            className={`w-full py-3.5 px-6 rounded-md font-semibold text-sm text-white shadow-sm transition-all flex items-center justify-center gap-2 ${
-              isSyncing
-                ? "bg-[#2c49b6]/80 cursor-wait"
-                : "bg-[#005eb8] hover:bg-[#004ba8] active:scale-[0.99]"
-            }`}
-          >
-            <RefreshCw
-              className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`}
-            />
-            <span>
-              {isSyncing
-                ? "Sedang Menyinkronkan Jadwal ke Google Calendar..."
-                : "Sinkronkan Sekarang ke Google Calendar"}
-            </span>
-          </button>
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={handleStartSync}
+              disabled={isSyncing || !captchaState.isVerified}
+              className={`w-full py-3.5 px-6 rounded-md font-semibold text-sm text-white shadow-sm transition-all flex items-center justify-center gap-2 ${
+                isSyncing
+                  ? "bg-[#2c49b6]/80 cursor-wait"
+                  : !captchaState.isVerified
+                    ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+                    : "bg-[#005eb8] hover:bg-[#004ba8] active:scale-[0.99] cursor-pointer"
+              }`}
+            >
+              <RefreshCw
+                className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`}
+              />
+              <span>
+                {isSyncing
+                  ? "Sedang Menyinkronkan Jadwal ke Google Calendar..."
+                  : !captchaState.isVerified
+                    ? "Selesaikan Verifikasi Keamanan di Atas untuk Sinkronisasi"
+                    : "Sinkronkan Sekarang ke Google Calendar"}
+              </span>
+            </button>
+            {!captchaState.isVerified && (
+              <p className="text-xs text-slate-500 text-center flex items-center justify-center gap-1.5">
+                <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
+                <span>Pilih jawaban tantangan di atas untuk mengaktifkan tombol sinkronisasi.</span>
+              </p>
+            )}
+          </div>
         ) : (
           <button
             type="button"
@@ -281,49 +309,60 @@ export function SyncControls({
 
       {/* Hasil Sinkronisasi */}
       {syncResult && (
-        <div className="border border-emerald-200 bg-emerald-50/70 rounded-lg p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-emerald-900 font-bold text-sm">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+        <div className="border border-emerald-300 bg-emerald-50/80 rounded-xl p-4 sm:p-5 space-y-4 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-emerald-950 font-bold text-sm sm:text-base">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>
                 Sinkronisasi Berhasil ke &quot;{syncResult.calendarName}&quot;
               </span>
             </div>
-            <span className="text-sm text-emerald-700">
-              {new Date(syncResult.syncedAt).toLocaleTimeString("id-ID")} WITA
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm sm:text-sm font-medium text-emerald-800 bg-emerald-100/80 px-2.5 py-1 rounded-full">
+                {new Date(syncResult.syncedAt).toLocaleTimeString("id-ID")} WITA
+              </span>
+              <a
+                href="https://calendar.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm sm:text-sm font-bold bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-1.5 rounded-lg transition-all shadow-xs cursor-pointer"
+              >
+                <span>Buka Google Calendar</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-sm">
-            <div className="bg-white p-2.5 rounded border border-emerald-200/80 shadow-xs">
-              <div className="text-slate-500 text-sm">
-                Total Tugas Ditemukan
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center text-sm">
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
+              <div className="text-slate-600 text-sm sm:text-sm font-medium">
+                Total Tugas
               </div>
-              <div className="text-base font-bold text-slate-800">
+              <div className="text-lg font-extrabold text-slate-900 mt-0.5">
                 {syncResult.totalEvents}
               </div>
             </div>
-            <div className="bg-white p-2.5 rounded border border-emerald-200/80 shadow-xs">
-              <div className="text-emerald-600 text-sm font-semibold">
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
+              <div className="text-emerald-700 text-sm sm:text-sm font-semibold">
                 Event Baru Dibuat
               </div>
-              <div className="text-base font-bold text-emerald-600">
+              <div className="text-lg font-extrabold text-emerald-700 mt-0.5">
                 +{syncResult.created}
               </div>
             </div>
-            <div className="bg-white p-2.5 rounded border border-emerald-200/80 shadow-xs">
-              <div className="text-blue-600 text-sm font-semibold">
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
+              <div className="text-blue-700 text-sm sm:text-sm font-semibold">
                 Event Diperbarui
               </div>
-              <div className="text-base font-bold text-blue-600">
+              <div className="text-lg font-extrabold text-blue-700 mt-0.5">
                 {syncResult.updated}
               </div>
             </div>
-            <div className="bg-white p-2.5 rounded border border-emerald-200/80 shadow-xs">
-              <div className="text-slate-400 text-sm">
-                Sudah Sinkron (Dilewati)
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
+              <div className="text-slate-600 text-sm sm:text-sm font-medium">
+                Sudah Sinkron (Lewat)
               </div>
-              <div className="text-base font-bold text-slate-600">
+              <div className="text-lg font-extrabold text-slate-700 mt-0.5">
                 {syncResult.skipped}
               </div>
             </div>

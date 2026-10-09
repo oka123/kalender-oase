@@ -2,13 +2,7 @@
 
 import React from "react";
 import { Logo } from "@/components/Logo";
-import {
-  LogIn,
-  LogOut,
-  CheckCircle2,
-  User,
-  GitBranch,
-} from "lucide-react";
+import { LogIn, LogOut, CheckCircle2, User, GitBranch } from "lucide-react";
 
 interface HeaderProps {
   user: {
@@ -34,15 +28,19 @@ export function Header({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo & Title */}
         <div className="flex items-center gap-3">
-          <Logo size="md" priority className="shadow-xs bg-white/10 p-0.5 border border-white/20" />
+          <Logo
+            size="md"
+            priority
+            className="shadow-xs bg-white p-0.5 border border-white/20"
+          />
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold tracking-tight text-lg text-white">
                 Kalender OASE
               </span>
-              <span className="hidden sm:inline-block text-sm uppercase font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-200 border border-blue-400/30">
+              {/* <span className="hidden sm:inline-block text-sm uppercase font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-200 border border-blue-400/30">
                 UNUD Academic
-              </span>
+              </span> */}
             </div>
             <p className="text-sm text-slate-300 hidden sm:block">
               Universitas Udayana Moodle to Google Calendar Sync

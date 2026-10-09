@@ -20,34 +20,22 @@ interface EventsListProps {
 
 export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterMode, setFilterMode] = useState<"all" | "deadline" | "agenda">(
-    "all",
-  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // Filter & Search
   const filteredEvents = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return events;
+    }
+
+    const query = searchQuery.toLowerCase();
     return events.filter((ev) => {
-      // Filter status deadline/agenda
-      if (filterMode === "deadline" && !ev.isDeadline) {
-        return false;
-      }
-      if (filterMode === "agenda" && ev.isDeadline) {
-        return false;
-      }
-
-      // Filter search
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        const matchTitle = ev.cleanTitle.toLowerCase().includes(query);
-        const matchCourse = ev.courseName.toLowerCase().includes(query);
-        const matchDesc = ev.cleanDescription.toLowerCase().includes(query);
-        return matchTitle || matchCourse || matchDesc;
-      }
-
-      return true;
+      const matchTitle = ev.cleanTitle.toLowerCase().includes(query);
+      const matchCourse = ev.courseName.toLowerCase().includes(query);
+      const matchDesc = ev.cleanDescription.toLowerCase().includes(query);
+      return matchTitle || matchCourse || matchDesc;
     });
-  }, [events, filterMode, searchQuery]);
+  }, [events, searchQuery]);
 
   const toggleExpand = (uid: string) => {
     setExpandedId((prev) => (prev === uid ? null : uid));
@@ -89,86 +77,81 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-5">
+    <div id="events-list" className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-5 scroll-mt-20">
       {/* Header Preview & Counter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
         <div>
           <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-[#2c49b6]" />
-            <span>Daftar Agenda & Tugas OASE</span>
-            <span className="text-sm font-normal text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+            <span>Daftar Kegiatan Kalender OASE</span>
+            <span className="text-sm font-semibold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
               {events.length} Terdeteksi
             </span>
           </h2>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Daftar agenda kegiatan dan tenggat waktu yang disinkronkan dari
-            kalender OASE Moodle Anda.
+          <p className="text-sm text-slate-600 mt-0.5">
+            Daftar jadwal kegiatan perkuliahan yang diekspor dari kalender OASE Moodle Anda.
           </p>
         </div>
         <button
           type="button"
           onClick={onRefresh}
           disabled={isLoading}
-          className="inline-flex items-center gap-1.5 text-sm text-[#2c49b6] hover:text-[#001d62] font-semibold self-start sm:self-auto py-1 px-2.5 rounded hover:bg-blue-50 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-[#005eb8] hover:text-[#001d62] font-semibold self-start sm:self-auto py-2 px-3 rounded-md hover:bg-blue-50 transition-colors cursor-pointer border border-transparent hover:border-blue-200"
         >
-          <Clock className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          <Clock className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
           <span>Muat Ulang Kalender</span>
         </button>
       </div>
 
-      {/* Search & Filter Bar */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-        <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari mata kuliah atau nama agenda..."
-            className="w-full pl-9 pr-3 py-2 text-sm rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-[#2c49b6] focus:border-[#2c49b6]"
-          />
-        </div>
-
-        {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 text-sm">
-          {(
-            [
-              { key: "all", label: "Semua" },
-              { key: "deadline", label: "Tenggat Waktu" },
-              { key: "agenda", label: "Agenda" },
-            ] as const
-          ).map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              onClick={() => setFilterMode(item.key)}
-              className={`px-3 py-1.5 rounded-md font-medium whitespace-nowrap transition-colors cursor-pointer ${
-                filterMode === item.key
-                  ? "bg-[#2c49b6] text-white shadow-xs"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Cari mata kuliah atau nama kegiatan..."
+          className="w-full pl-9 pr-10 py-2.5 text-sm rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#2c49b6] focus:border-[#2c49b6] bg-white shadow-2xs"
+        />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => setSearchQuery("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500 hover:text-slate-800 p-1 cursor-pointer"
+          >
+            Hapus
+          </button>
+        )}
       </div>
 
       {/* List Items */}
       {isLoading ? (
-        <div className="py-12 text-center text-slate-400 space-y-2">
-          <div className="w-6 h-6 border-2 border-[#2c49b6] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm">
-            Sedang memuat dan memparsing jadwal dari OASE UNUD...
-          </p>
+        <div className="space-y-3 py-2">
+          {[1, 2, 3].map((skeletonIndex) => (
+            <div
+              key={skeletonIndex}
+              className="border border-slate-200 rounded-lg p-4 bg-white animate-pulse space-y-3"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="h-5 w-20 bg-slate-200 rounded" />
+                <div className="h-5 w-40 bg-slate-200 rounded" />
+                <div className="h-5 w-24 bg-slate-200 rounded-full" />
+              </div>
+              <div className="h-6 w-3/4 bg-slate-200 rounded" />
+              <div className="flex items-center justify-between pt-1">
+                <div className="h-4 w-48 bg-slate-200 rounded" />
+                <div className="h-8 w-24 bg-slate-200 rounded" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : filteredEvents.length === 0 ? (
-        <div className="py-12 text-center text-slate-400 space-y-2 border border-dashed border-slate-200 rounded-lg">
-          <BookOpen className="w-8 h-8 mx-auto text-slate-300" />
-          <p className="text-sm font-medium text-slate-600">
+        <div className="py-12 text-center text-slate-500 space-y-2 border border-dashed border-slate-300 rounded-lg bg-slate-50/50">
+          <BookOpen className="w-8 h-8 mx-auto text-slate-400" />
+          <p className="text-sm font-semibold text-slate-700">
             Tidak ada agenda yang ditemukan
           </p>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500 max-w-md mx-auto">
             {searchQuery
               ? "Coba gunakan kata kunci pencarian yang lain."
               : "Pastikan URL kalender OASE sudah benar dan memiliki agenda aktif."}
@@ -198,16 +181,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                 <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div className="space-y-1.5 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      {event.isDeadline ? (
-                        <span className="inline-flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#2c49b6] border border-blue-200">
-                          <Clock className="w-3.5 h-3.5" /> Deadline
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-sm font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
-                          <Calendar className="w-3.5 h-3.5" /> Agenda
-                        </span>
-                      )}
-                      <span className="text-sm font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                      <span className="text-sm font-semibold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">
                         {event.courseName}
                       </span>
                       {getDeadlineBadge(startDate)}

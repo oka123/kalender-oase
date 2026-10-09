@@ -16,6 +16,48 @@ export function normalizeIcalUrl(rawUrl: string): string {
 }
 
 /**
+ * Validasi ketat URL iCal untuk mencegah Server-Side Request Forgery (SSRF)
+ * Hanya mengizinkan protokol HTTPS dan domain resmi Universitas Udayana (oase.unud.ac.id / *.unud.ac.id)
+ */
+export function validateAndNormalizeIcalUrl(rawUrl: string): string {
+  if (!rawUrl || typeof rawUrl !== 'string') {
+    throw new Error('URL kalender iCal tidak boleh kosong.');
+  }
+
+  const normalized = normalizeIcalUrl(rawUrl);
+
+  let parsed: URL;
+  try {
+    parsed = new URL(normalized);
+  } catch {
+    throw new Error('Format URL kalender tidak valid.');
+  }
+
+  // Wajib protokol HTTPS
+  if (parsed.protocol !== 'https:') {
+    throw new Error('URL kalender wajib menggunakan protokol aman HTTPS.');
+  }
+
+  const hostname = parsed.hostname.toLowerCase();
+  const isDevOrTest = process.env.NODE_ENV !== 'production';
+
+  // Izinkan localhost hanya pada environment dev/test jika dibutuhkan
+  if (isDevOrTest && (hostname === 'localhost' || hostname === '127.0.0.1')) {
+    return normalized;
+  }
+
+  // Tolak seluruh IP privat, metadata service, dan domain luar
+  const isOfficialDomain = hostname === 'oase.unud.ac.id' || hostname.endsWith('.unud.ac.id');
+  if (!isOfficialDomain) {
+    throw new Error(
+      `Domain kalender "${hostname}" tidak diizinkan demi keamanan. Hanya URL kalender dari oase.unud.ac.id yang didukung.`
+    );
+  }
+
+  return normalized;
+}
+
+/**
  * Ekstraksi tipe event, judul bersih, dan status deadline dari summary Moodle
  */
 export function parseEventSummary(rawSummary: string): {
@@ -157,13 +199,14 @@ export async function fetchAndParseIcal(rawUrl?: string): Promise<OaseEvent[]> {
     throw new Error('URL iCal OASE belum dikonfigurasi. Silakan isi URL di konfigurasi atau environment variable OASE_ICAL_URL.');
   }
 
-  const normalizedUrl = normalizeIcalUrl(targetUrl);
+  const normalizedUrl = validateAndNormalizeIcalUrl(targetUrl);
 
   const response = await fetch(normalizedUrl, {
     headers: {
       'User-Agent': 'OASE-Academic-Calendar-Sync/1.0',
       'Accept': 'text/calendar, text/plain, */*',
     },
+    signal: AbortSignal.timeout(12000), // Timeout 12 detik untuk mencegah Slowloris DoS
     // Cache sebentar untuk mencegah spam request berulang ke server OASE
     next: { revalidate: 60 },
   });

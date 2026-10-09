@@ -35,7 +35,7 @@ export function Logo({
 
   return (
     <div
-      className={`relative inline-flex items-center justify-center shrink-0 overflow-hidden rounded-xl ${className}`}
+      className={`relative inline-flex bg-white items-center justify-center shrink-0 overflow-hidden rounded-xl ${className}`}
       style={{ width: dimension, height: dimension }}
     >
       <Image

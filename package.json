@@ -2,12 +2,13 @@
   "name": "kalender-oase",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test tests/ical.test.ts tests/sync.test.ts",
+    "test": "node --experimental-strip-types --test tests/ical.test.ts tests/sync.test.ts tests/security.test.ts",
     "sync:cron": "node --experimental-strip-types scripts/sync.ts"
   },
   "dependencies": {

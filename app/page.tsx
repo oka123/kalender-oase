@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, Suspense, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  Suspense,
+  useMemo,
+} from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/Header";
@@ -10,6 +16,7 @@ import { IcalConfigCard } from "@/components/IcalConfigCard";
 import { GithubActionsModal } from "@/components/GithubActionsModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Logo } from "@/components/Logo";
+import { WorkflowStepper } from "@/components/WorkflowStepper";
 import type {
   OaseEvent,
   GoogleCalendarItem,
@@ -46,7 +53,8 @@ function DashboardContent() {
     type: "success" | "error";
     message: string;
   } | null>(null);
-  const [isQueryNotifDismissed, setIsQueryNotifDismissed] = useState<boolean>(false);
+  const [isQueryNotifDismissed, setIsQueryNotifDismissed] =
+    useState<boolean>(false);
 
   const authStatus = searchParams.get("auth");
   const authError = searchParams.get("auth_error");
@@ -68,7 +76,8 @@ function DashboardContent() {
     return null;
   }, [authStatus, authError]);
 
-  const activeNotification = notification || (isQueryNotifDismissed ? null : queryNotification);
+  const activeNotification =
+    notification || (isQueryNotifDismissed ? null : queryNotification);
 
   // Muat daftar kalender Google
   const loadCalendars = useCallback(async () => {
@@ -153,6 +162,7 @@ function DashboardContent() {
     calendarId: string;
     createDedicatedCalendar: boolean;
     reminderMinutes: number[];
+    turnstileToken?: string;
   }) => {
     setIsSyncing(true);
     setSyncResult(null);
@@ -161,6 +171,7 @@ function DashboardContent() {
       const body = {
         ...options,
         customIcalUrl: isCustomUrlActive ? customIcalUrl : undefined,
+        turnstileToken: options.turnstileToken,
       };
 
       const res = await fetch("/api/sync", {
@@ -331,26 +342,48 @@ function DashboardContent() {
                   <GraduationCap className="w-4 h-4 text-amber-300" />
                   <span>Universitas Udayana</span>
                 </div>
-                <span className="text-sm font-bold px-3 py-1 rounded-full bg-amber-400/20 text-amber-200 border border-amber-300/30">
-                  Informatika Kelas A Angkatan 2024
-                </span>
+                {/* <span className="text-sm font-bold px-3 py-1 rounded-full bg-amber-400/20 text-amber-200 border border-amber-300/30">
+                  Tersedia untuk Seluruh Mahasiswa UNUD
+                </span> */}
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 Kalender OASE
               </h1>
               <p className="text-sm text-blue-100 leading-relaxed">
-                Sinkronisasikan seluruh tenggat pengumpulan tugas, jadwal kuis, UTS, dan UAS dari Moodle OASE (default: <strong>Informatika Kelas A Angkatan 2024</strong>) ke Google Calendar secara otomatis dengan notifikasi alarm pengingat.
+                Sinkronisasikan seluruh tenggat pengumpulan tugas, kuis, UTS,
+                dan UAS dari portal Moodle OASE ke Google Calendar Anda secara
+                otomatis disertai notifikasi alarm pengingat. (Default feed:{" "}
+                <em>Informatika Kelas A &apos;24</em> &bull; Dapat disesuaikan
+                dengan URL prodi Anda).
               </p>
             </div>
 
             {/* Logo Badge di Hero */}
-            <div className="hidden md:flex items-center justify-center p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-inner shrink-0">
+            <div className="hidden md:flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-inner shrink-0">
               <Logo size={76} priority className="drop-shadow-md" />
             </div>
           </div>
           {/* Subtle Decorative Background Element */}
           <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 bg-radial from-white to-transparent pointer-events-none" />
         </div>
+
+        {/* 3-Step Alur Cepat Onboarding */}
+        <WorkflowStepper
+          isAuthenticated={isAuthenticated}
+          eventsCount={events.length}
+          hasSynced={Boolean(syncResult)}
+          onLoginClick={handleLogin}
+          onScrollToSync={() => {
+            document
+              .getElementById("sync-controls")
+              ?.scrollIntoView({ behavior: "smooth" });
+          }}
+          onScrollToEvents={() => {
+            document
+              .getElementById("events-list")
+              ?.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
 
         {/* Konfigurasi Sumber iCal */}
         <IcalConfigCard
@@ -418,8 +451,8 @@ function DashboardContent() {
             </Link>
             <span className="text-slate-300">&bull;</span>
             <p>
-              &copy; {new Date().getFullYear()} Kalender OASE &bull;
-              Universitas Udayana
+              &copy; {new Date().getFullYear()} Kalender OASE &bull; Universitas
+              Udayana
             </p>
           </div>
         </div>

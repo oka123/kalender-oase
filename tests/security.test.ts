@@ -1,0 +1,82 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { checkRateLimit, getClientIp } from '../lib/rate-limit.ts';
+import { verifyTurnstileToken } from '../lib/captcha.ts';
+import { validateAndNormalizeIcalUrl } from '../lib/ical.ts';
+
+test('Rate Limiter: enforces sliding window and blocks excessive requests', () => {
+  const rule = { windowMs: 1000, maxRequests: 3 };
+  const key = `test-ip-${Date.now()}`;
+
+  // 3 request pertama harus berhasil
+  const r1 = checkRateLimit(key, rule);
+  assert.equal(r1.success, true);
+  assert.equal(r1.remaining, 2);
+
+  const r2 = checkRateLimit(key, rule);
+  assert.equal(r2.success, true);
+  assert.equal(r2.remaining, 1);
+
+  const r3 = checkRateLimit(key, rule);
+  assert.equal(r3.success, true);
+  assert.equal(r3.remaining, 0);
+
+  // Request ke-4 harus diblokir (429)
+  const r4 = checkRateLimit(key, rule);
+  assert.equal(r4.success, false);
+  assert.ok((r4.retryAfterSeconds ?? 0) >= 1);
+});
+
+test('Rate Limiter: extracts IP correctly from various proxy headers', () => {
+  const req1 = new Request('http://localhost', {
+    headers: { 'cf-connecting-ip': '203.0.113.195' },
+  });
+  assert.equal(getClientIp(req1), '203.0.113.195');
+
+  const req2 = new Request('http://localhost', {
+    headers: { 'x-real-ip': '198.51.100.44' },
+  });
+  assert.equal(getClientIp(req2), '198.51.100.44');
+
+  const req3 = new Request('http://localhost', {
+    headers: { 'x-forwarded-for': '192.0.2.1, 10.0.0.1' },
+  });
+  assert.equal(getClientIp(req3), '192.0.2.1');
+});
+
+test('Cloudflare Turnstile: rejects empty or invalid token inputs', async () => {
+  const resEmpty = await verifyTurnstileToken('');
+  assert.equal(resEmpty.valid, false);
+  assert.ok(resEmpty.error?.includes('tidak ditemukan'));
+
+  const resWhitespace = await verifyTurnstileToken('   ');
+  assert.equal(resWhitespace.valid, false);
+});
+
+test('Cloudflare Turnstile: handles missing server secret key gracefully', async () => {
+  const originalKey = process.env.TURNSTILE_SECRET_KEY;
+  delete process.env.TURNSTILE_SECRET_KEY;
+
+  try {
+    const res = await verifyTurnstileToken('dummy-token-sample');
+    assert.equal(res.valid, false);
+    assert.ok(res.error?.includes('TURNSTILE_SECRET_KEY'));
+  } finally {
+    if (originalKey) {
+      process.env.TURNSTILE_SECRET_KEY = originalKey;
+    }
+  }
+});
+
+test('SSRF Protection: validateAndNormalizeIcalUrl rejects disallowed hostnames and protocols', () => {
+  // Hanya https://oase.unud.ac.id yang diizinkan
+  assert.doesNotThrow(() => {
+    validateAndNormalizeIcalUrl('https://oase.unud.ac.id/calendar/export_execute.php?userid=123');
+  });
+
+  // SSRF attempts ke internal network & non-https
+  assert.throws(() => validateAndNormalizeIcalUrl('http://169.254.169.254/latest/meta-data/'));
+  assert.throws(() => validateAndNormalizeIcalUrl('file:///etc/passwd'));
+  assert.throws(() => validateAndNormalizeIcalUrl('javascript:alert(1)'));
+  assert.throws(() => validateAndNormalizeIcalUrl('https://evil-attacker.com/malicious.ics'));
+});

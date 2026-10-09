@@ -14,11 +14,18 @@ export async function GET() {
 
     const refreshToken = session.tokens.refresh_token || null;
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       hasRefreshToken: Boolean(refreshToken),
       refreshToken,
       email: session.email,
     });
+
+    // Cegah peramban atau proxy menyimpan token sensitif ke dalam cache
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+
+    return response;
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Gagal mengambil refresh token';
     return NextResponse.json({ error: message }, { status: 500 });

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   X,
   Copy,
@@ -10,7 +10,7 @@ import {
   GitBranch,
   Globe,
   Radio,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface GithubActionsModalProps {
   isOpen: boolean;
@@ -78,7 +78,8 @@ export function GithubActionsModal({
                 Setup Otomatisasi GitHub Actions $\rightarrow$ Vercel Webhook
               </h3>
               <p className="text-sm text-slate-500">
-                GitHub Actions memicu sinkronisasi ke server Vercel Anda setiap 2 jam sekali.
+                GitHub Actions memicu sinkronisasi ke server Vercel Anda setiap
+                2 jam sekali.
               </p>
             </div>
           </div>
@@ -97,10 +98,14 @@ export function GithubActionsModal({
           <div className="bg-blue-50/80 border border-blue-200 rounded-lg p-3.5 text-blue-900 space-y-1">
             <div className="font-bold flex items-center gap-1.5 text-sm">
               <GitBranch className="w-4 h-4 text-[#2c49b6]" />
-              <span>Pendekatan Webhook Terpasang: Sangat Cepat &amp; Hemat Kuota</span>
+              <span>
+                Pendekatan Webhook Terpasang: Sangat Cepat &amp; Hemat Kuota
+              </span>
             </div>
             <p className="text-sm leading-relaxed">
-              Workflow <code>.github/workflows/sync.yml</code> akan memanggil endpoint <code>/api/cron/sync</code> di Vercel secara terjadwal dengan otentikasi <code>CRON_SECRET</code>.
+              Workflow <code>.github/workflows/sync.yml</code> akan memanggil
+              endpoint <code>/api/cron/sync</code> di Vercel secara terjadwal
+              dengan otentikasi <code>CRON_SECRET</code>.
             </p>
           </div>
 
@@ -108,14 +113,19 @@ export function GithubActionsModal({
           <div className="space-y-2">
             <div className="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-1.5">
               <Globe className="w-4 h-4 text-[#005eb8]" />
-              <span>Langkah 1: Tambahkan di Vercel Dashboard (Settings &gt; Environment Variables)</span>
+              <span>
+                Langkah 1: Tambahkan di Vercel Dashboard (Settings &gt;
+                Environment Variables)
+              </span>
             </div>
 
             <div className="p-3.5 rounded-lg border border-slate-200 bg-slate-50 space-y-2.5">
               {/* GOOGLE_REFRESH_TOKEN */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2">
                 <div>
-                  <div className="font-mono font-bold text-slate-800 text-sm">GOOGLE_REFRESH_TOKEN</div>
+                  <div className="font-mono font-bold text-slate-800 text-sm">
+                    GOOGLE_REFRESH_TOKEN
+                  </div>
                   <div className="text-sm text-slate-500">
                     {isAuthenticated ? (
                       refreshToken ? (
@@ -123,30 +133,41 @@ export function GithubActionsModal({
                           {refreshToken.slice(0, 15)}••••••••••••••••
                         </span>
                       ) : isLoadingToken ? (
-                        'Mengambil token...'
+                        "Mengambil token..."
                       ) : (
-                        <span className="text-amber-600">Hubungkan ulang akun Google jika token belum terisi.</span>
+                        <span className="text-amber-600">
+                          Hubungkan ulang akun Google jika token belum terisi.
+                        </span>
                       )
                     ) : (
-                      'Login ke Google di web ini terlebih dahulu untuk mendapatkan token.'
+                      "Login ke Google di web ini terlebih dahulu untuk mendapatkan token."
                     )}
                   </div>
                 </div>
                 {refreshToken && (
                   <button
                     type="button"
-                    onClick={() => handleCopy(refreshToken, 'token')}
+                    onClick={() => handleCopy(refreshToken, "token")}
                     className="inline-flex items-center gap-1 px-3 py-1.5 rounded bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold shrink-0 cursor-pointer"
                   >
-                    {copiedKey === 'token' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copiedKey === 'token' ? 'Tersalin' : 'Salin Token'}</span>
+                    {copiedKey === "token" ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                    <span>
+                      {copiedKey === "token" ? "Tersalin" : "Salin Token"}
+                    </span>
                   </button>
                 )}
               </div>
 
               {/* CRON_SECRET */}
               <div className="text-sm text-slate-600">
-                <span className="font-mono font-bold text-slate-800">CRON_SECRET</span>: Buat string acak rahasia untuk mengamankan webhook (misal: <code>oase-sync-rahasia-2026</code>).
+                <span className="font-mono font-bold text-slate-800">
+                  CRON_SECRET
+                </span>
+                : Buat string acak rahasia untuk mengamankan webhook
               </div>
             </div>
           </div>
@@ -155,21 +176,30 @@ export function GithubActionsModal({
           <div className="space-y-2">
             <div className="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-1.5">
               <KeyRound className="w-4 h-4 text-[#2c49b6]" />
-              <span>Langkah 2: Tambahkan 2 Secrets di GitHub (Settings &gt; Secrets &gt; Actions)</span>
+              <span>
+                Langkah 2: Tambahkan 2 Secrets di GitHub (Settings &gt; Secrets
+                &gt; Actions)
+              </span>
             </div>
 
             <div className="space-y-2">
               <div className="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
-                <div className="font-mono font-bold text-slate-800 text-sm">VERCEL_APP_URL</div>
+                <div className="font-mono font-bold text-slate-800 text-sm">
+                  VERCEL_APP_URL
+                </div>
                 <div className="text-sm text-slate-500">
-                  Domain aplikasi Anda di Vercel (contoh: <code>https://kalender-oase.vercel.app</code>).
+                  Domain aplikasi Anda di Vercel (contoh:{" "}
+                  <code>https://kalender-oase.vercel.app</code>).
                 </div>
               </div>
 
               <div className="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
-                <div className="font-mono font-bold text-slate-800 text-sm">CRON_SECRET</div>
+                <div className="font-mono font-bold text-slate-800 text-sm">
+                  CRON_SECRET
+                </div>
                 <div className="text-sm text-slate-500">
-                  Nilai rahasia yang sama persis dengan yang Anda pasang di environment variable Vercel.
+                  Nilai rahasia yang sama persis dengan yang Anda pasang di
+                  environment variable Vercel.
                 </div>
               </div>
             </div>
@@ -178,7 +208,9 @@ export function GithubActionsModal({
           <div className="bg-emerald-50 border border-emerald-200 rounded p-2.5 text-sm text-emerald-900 flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             <span>
-              <strong>Selesai!</strong> Setelah kedua secret tersebut disetel, GitHub Actions akan mengirim ping webhook setiap 2 jam sekali ke Vercel untuk menyinkronkan tugas OASE secara otomatis 24/7.
+              <strong>Selesai!</strong> Setelah kedua secret tersebut disetel,
+              GitHub Actions akan mengirim ping webhook setiap 2 jam sekali ke
+              Vercel untuk menyinkronkan tugas OASE secara otomatis 24/7.
             </span>
           </div>
         </div>

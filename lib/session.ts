@@ -7,7 +7,10 @@ const ALGORITHM = 'aes-256-gcm';
 
 // Dapatkan encryption key 32-byte dari environment secret
 function getEncryptionKey(): Buffer {
-  const secret = process.env.SESSION_SECRET || process.env.GOOGLE_CLIENT_SECRET || 'default-kalender-oase-secret-fallback-key-32b';
+  const secret = process.env.SESSION_SECRET || process.env.GOOGLE_CLIENT_SECRET;
+  if (!secret) {
+    throw new Error('SESSION_SECRET atau GOOGLE_CLIENT_SECRET wajib disetel di environment variables untuk mengamankan enkripsi sesi.');
+  }
   return crypto.createHash('sha256').update(secret).digest();
 }
 

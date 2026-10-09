@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   normalizeIcalUrl,
+  validateAndNormalizeIcalUrl,
   parseEventSummary,
   parseEventDescription,
   parseIcalData,
@@ -14,6 +15,30 @@ test('normalizeIcalUrl converts webcal:// to https:// and trims whitespace', () 
 
   const httpsInput = 'https://oase.unud.ac.id/calendar.ics';
   assert.equal(normalizeIcalUrl(httpsInput), httpsInput);
+});
+
+test('validateAndNormalizeIcalUrl protects against SSRF and validates official Udayana domains', () => {
+  // 1. Valid domain: oase.unud.ac.id
+  const validUrl = 'webcal://oase.unud.ac.id/calendar/export_execute.php?userid=302&token=abc';
+  assert.equal(
+    validateAndNormalizeIcalUrl(validUrl),
+    'https://oase.unud.ac.id/calendar/export_execute.php?userid=302&token=abc'
+  );
+
+  // 2. Reject internal cloud metadata service (AWS/GCP SSRF)
+  assert.throws(() => {
+    validateAndNormalizeIcalUrl('http://169.254.169.254/latest/meta-data/');
+  }, /Domain kalender .* tidak diizinkan demi keamanan/);
+
+  // 3. Reject external malicious domains
+  assert.throws(() => {
+    validateAndNormalizeIcalUrl('https://evil-attacker.com/malicious.ics');
+  }, /Domain kalender .* tidak diizinkan demi keamanan/);
+
+  // 4. Reject empty or non-HTTPS URLs
+  assert.throws(() => {
+    validateAndNormalizeIcalUrl('');
+  }, /URL kalender iCal tidak boleh kosong/);
 });
 
 test('parseEventSummary identifies clean title and deadlines accurately without invalid category heuristics', () => {
