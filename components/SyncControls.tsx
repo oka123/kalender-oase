@@ -80,7 +80,10 @@ export function SyncControls({
   };
 
   return (
-    <div id="sync-controls" className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-6 scroll-mt-20">
+    <div
+      id="sync-controls"
+      className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-6 scroll-mt-20"
+    >
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
         <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
           <Layers className="w-5 h-5 text-[#2c49b6]" />
@@ -91,7 +94,7 @@ export function SyncControls({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Kolom 1: Pilihan Kalender Tujuan */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block">
+          <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider block">
             Kalender Tujuan
           </label>
           <div className="space-y-1.5">
@@ -111,7 +114,7 @@ export function SyncControls({
               />
               <div className="text-sm font-semibold text-slate-800 flex items-center justify-between flex-1">
                 <span>Kalender Khusus &quot;OASE UNUD&quot;</span>
-                <span className="text-xs font-normal text-slate-500">
+                <span className="text-sm font-normal text-slate-500">
                   (Disarankan)
                 </span>
               </div>
@@ -159,7 +162,7 @@ export function SyncControls({
                     <select
                       value={selectedCalendarId}
                       onChange={(e) => setSelectedCalendarId(e.target.value)}
-                      className="mt-1.5 block w-full text-xs rounded border border-slate-300 bg-white py-1 px-2 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#2c49b6]"
+                      className="mt-1.5 block w-full text-sm rounded border border-slate-300 bg-white py-1 px-2 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#2c49b6]"
                     >
                       {calendars.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -176,8 +179,8 @@ export function SyncControls({
 
         {/* Kolom 2: Pengaturan Notifikasi Alarm */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block">
-            Pengingat Alarm
+          <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider block">
+            Notifikasi Pengingat
           </label>
           <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/60 space-y-2">
             <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
@@ -189,7 +192,7 @@ export function SyncControls({
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-amber-500" />
-                <span>24 Jam Sebelumnya</span>
+                <span>24 jam sebelumnya</span>
               </span>
             </label>
 
@@ -202,7 +205,7 @@ export function SyncControls({
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-amber-500" />
-                <span>2 Jam Sebelumnya</span>
+                <span>2 jam sebelumnya</span>
               </span>
             </label>
 
@@ -215,7 +218,7 @@ export function SyncControls({
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-slate-400" />
-                <span>30 Menit Sebelumnya</span>
+                <span>30 menit sebelumnya</span>
               </span>
             </label>
           </div>
@@ -247,16 +250,19 @@ export function SyncControls({
               />
               <span>
                 {isSyncing
-                  ? "Sedang Menyinkronkan Jadwal ke Google Calendar..."
+                  ? "Menyinkronkan ke Google Calendar..."
                   : !captchaState.isVerified
-                    ? "Selesaikan Verifikasi Keamanan di Atas untuk Sinkronisasi"
-                    : "Sinkronkan Sekarang ke Google Calendar"}
+                    ? "Selesaikan verifikasi keamanan di atas"
+                    : "Sinkronkan ke Google Calendar"}
               </span>
             </button>
             {!captchaState.isVerified && (
-              <p className="text-xs text-slate-500 text-center flex items-center justify-center gap-1.5">
+              <p className="text-sm text-slate-500 text-center flex items-center justify-center gap-1.5">
                 <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
-                <span>Pilih jawaban tantangan di atas untuk mengaktifkan tombol sinkronisasi.</span>
+                <span>
+                  Selesaikan verifikasi keamanan untuk mengaktifkan tombol
+                  sinkronisasi.
+                </span>
               </p>
             )}
           </div>
@@ -264,10 +270,10 @@ export function SyncControls({
           <button
             type="button"
             onClick={onLoginRequest}
-            className="w-full py-3.5 px-6 rounded-md font-semibold text-sm text-white bg-[#2c49b6] hover:bg-[#22398d] shadow-sm transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-6 rounded-md font-semibold text-sm text-white bg-[#2c49b6] hover:bg-[#22398d] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Calendar className="w-4 h-4 text-amber-300" />
-            <span>Hubungkan Google Calendar untuk Mulai Sinkronisasi</span>
+            <span>Connect Google Calendar</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         )}
@@ -302,7 +308,7 @@ export function SyncControls({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center text-sm">
             <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
               <div className="text-slate-600 text-sm sm:text-sm font-medium">
-                Total Tugas
+                Total Agenda
               </div>
               <div className="text-lg font-extrabold text-slate-900 mt-0.5">
                 {syncResult.totalEvents}
@@ -310,7 +316,7 @@ export function SyncControls({
             </div>
             <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
               <div className="text-emerald-700 text-sm sm:text-sm font-semibold">
-                Event Baru Dibuat
+                Event Baru
               </div>
               <div className="text-lg font-extrabold text-emerald-700 mt-0.5">
                 +{syncResult.created}
@@ -318,7 +324,7 @@ export function SyncControls({
             </div>
             <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
               <div className="text-blue-700 text-sm sm:text-sm font-semibold">
-                Event Diperbarui
+                Diperbarui
               </div>
               <div className="text-lg font-extrabold text-blue-700 mt-0.5">
                 {syncResult.updated}
@@ -326,7 +332,7 @@ export function SyncControls({
             </div>
             <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-xs">
               <div className="text-slate-600 text-sm sm:text-sm font-medium">
-                Sudah Sinkron (Lewat)
+                Sudah Sinkron
               </div>
               <div className="text-lg font-extrabold text-slate-700 mt-0.5">
                 {syncResult.skipped}

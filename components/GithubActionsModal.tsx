@@ -77,8 +77,9 @@ export function GithubActionsModal({
               <h3 className="text-base sm:text-lg font-bold text-slate-800">
                 Otomatisasi GitHub Actions
               </h3>
-              <p className="text-xs sm:text-sm text-slate-500">
-                Pemicu sinkronisasi berkala ke Google Calendar di latar belakang.
+              <p className="text-sm sm:text-sm text-slate-500">
+                Pemicu sinkronisasi berkala ke Google Calendar di latar
+                belakang.
               </p>
             </div>
           </div>
@@ -98,7 +99,7 @@ export function GithubActionsModal({
             <div className="font-bold flex items-center gap-1.5 text-sm">
               <GitBranch className="w-4 h-4 text-[#2c49b6]" />
               <span>
-                Pendekatan Webhook Terpasang: Sangat Cepat &amp; Hemat Kuota
+                Sinkronisasi Otomatis via Webhook
               </span>
             </div>
             <p className="text-sm leading-relaxed">

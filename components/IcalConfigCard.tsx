@@ -41,7 +41,10 @@ export function IcalConfigCard({
   };
 
   return (
-    <div id="ical-source-section" className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-3.5 scroll-mt-20">
+    <div
+      id="ical-source-section"
+      className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-3.5 scroll-mt-20"
+    >
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
         <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
           <Link2 className="w-4 h-4 text-[#2c49b6]" />
@@ -51,10 +54,10 @@ export function IcalConfigCard({
         <button
           type="button"
           onClick={() => setShowGuide(!showGuide)}
-          className="inline-flex items-center gap-1.5 text-xs text-[#005eb8] hover:text-[#001d62] font-semibold cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-sm text-[#005eb8] hover:text-[#001d62] font-semibold cursor-pointer"
         >
           <HelpCircle className="w-3.5 h-3.5" />
-          <span>Panduan Ambil URL</span>
+          <span>Panduan Export URL</span>
           {showGuide ? (
             <ChevronUp className="w-3 h-3" />
           ) : (
@@ -68,7 +71,7 @@ export function IcalConfigCard({
         <div className="bg-blue-50/80 border border-blue-200 rounded-lg p-4 text-sm text-slate-700 space-y-3 transition-all">
           <div className="font-bold text-[#001d62] flex items-center justify-between">
             <span className="text-sm">
-              Langkah Mendapatkan URL Kalender di OASE UNUD:
+              Cara Mendapatkan URL Kalender di OASE UNUD:
             </span>
             <a
               href="https://oase.unud.ac.id/calendar/view.php"
@@ -113,16 +116,14 @@ export function IcalConfigCard({
               .
             </li>
             <li>
-              Buka menu <strong>Calendar</strong> di sidebar navigasi sebelah
-              kiri.
+              Buka menu <strong>Calendar</strong> di sidebar navigasi.
             </li>
             <li>
               Di bagian bawah halaman kalender, klik menu{" "}
               <strong>&quot;Import or export calendars&quot;</strong>.
             </li>
             <li>
-              Pilih tab atau tombol <strong>&quot;Export calendar&quot;</strong>
-              .
+              Pilih tombol <strong>&quot;Export calendar&quot;</strong>.
             </li>
             <li>
               Tentukan opsi:
@@ -134,7 +135,6 @@ export function IcalConfigCard({
                 </li>
                 <li>
                   <strong>Time period</strong>: Pilih{" "}
-                  <em>&quot;This month&quot;</em> atau{" "}
                   <em>&quot;Recent and next 60 days&quot;</em>.
                 </li>
               </ul>
@@ -143,8 +143,7 @@ export function IcalConfigCard({
               Klik tombol <strong>&quot;Get calendar URL&quot;</strong>.
             </li>
             <li>
-              Salin URL yang dihasilkan dan tempelkan ke kolom URL kalender di
-              aplikasi ini.
+              Salin URL yang dihasilkan dan tempelkan ke kolom URL di bawah ini.
             </li>
           </ol>
         </div>
@@ -154,11 +153,18 @@ export function IcalConfigCard({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/70 p-3.5 rounded-lg border border-slate-200">
         <div className="flex items-center gap-2.5 min-w-0">
           <Lock className="w-4 h-4 text-slate-400 shrink-0" />
-          <div className="text-xs sm:text-sm font-medium text-slate-700 truncate">
+          <div className="text-sm sm:text-sm font-medium text-slate-700 truncate">
             {isCustomUrlActive ? (
-              <span className="text-[#2c49b6] font-semibold">URL Kalender Kustom Anda Aktif</span>
+              <span className="text-[#2c49b6] font-semibold">
+                Custom URL Aktif
+              </span>
             ) : hasConfiguredUrl ? (
-              <span>Feed Default: <strong className="text-slate-900 font-semibold">Informatika Kelas A &apos;24</strong></span>
+              <span>
+                Default:{" "}
+                <strong className="text-slate-900 font-semibold">
+                  Informatika Kelas A &apos;24
+                </strong>
+              </span>
             ) : (
               <span className="text-amber-700">Belum ada URL kalender</span>
             )}
@@ -172,13 +178,13 @@ export function IcalConfigCard({
               setIsEditing(!isEditing);
               setInputUrl("");
             }}
-            className="text-xs font-semibold px-3 py-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition-colors cursor-pointer"
+            className="text-sm font-semibold px-3 py-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition-colors cursor-pointer"
           >
             {isEditing
               ? "Batal"
               : isCustomUrlActive || hasConfiguredUrl
                 ? "Ganti URL"
-                : "Masukkan URL"}
+                : "Input URL"}
           </button>
         </div>
       </div>
@@ -205,7 +211,7 @@ export function IcalConfigCard({
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                 title={showPassword ? "Sembunyikan URL" : "Tampilkan URL"}
               >
                 {showPassword ? (
@@ -220,13 +226,13 @@ export function IcalConfigCard({
               !inputUrl.includes(".ics") && (
                 <p className="text-sm text-amber-700 bg-amber-50 p-2 rounded border border-amber-200 mt-1">
                   ⚠️ Perhatian: URL kalender OASE Moodle biasanya memuat{" "}
-                  <code>export_execute.php</code> atau ekstensi <code>.ics</code>.
-                  Pastikan Anda menyalin URL dari tombol <em>&quot;Get calendar URL&quot;</em> di OASE.
+                  <code>export_execute.php</code> atau ekstensi{" "}
+                  <code>.ics</code>. Pastikan Anda menyalin URL dari tombol{" "}
+                  <em>&quot;Get calendar URL&quot;</em> di OASE.
                 </p>
               )}
             <p className="text-sm text-slate-600 mt-1">
-              URL ini memuat token autentikasi pribadi Anda dan akan disimpan
-              secara aman tanpa ditampilkan ke publik.
+              URL ini memuat token autentikasi pribadi Anda dan disimpan secara aman di peramban Anda.
             </p>
           </div>
 
@@ -235,7 +241,7 @@ export function IcalConfigCard({
               type="submit"
               className="text-sm font-semibold px-4 py-2 rounded-md bg-[#005eb8] hover:bg-[#004ba8] text-white transition-colors cursor-pointer"
             >
-              Terapkan URL
+              Simpan &amp; Terapkan
             </button>
             {isCustomUrlActive && (
               <button
@@ -246,7 +252,7 @@ export function IcalConfigCard({
                 }}
                 className="text-sm font-semibold px-4 py-2 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
               >
-                Kembalikan ke Default
+                Reset ke Default
               </button>
             )}
           </div>

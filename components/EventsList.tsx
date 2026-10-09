@@ -49,35 +49,38 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
 
     if (diffHours < 0) {
       return (
-        <span className="text-xs font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-500">
+        <span className="text-sm font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-500">
           Selesai
         </span>
       );
     }
     if (diffHours <= 24) {
       return (
-        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-700">
+        <span className="text-sm font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-700">
           Hari ini ({Math.ceil(diffHours)} jam)
         </span>
       );
     }
     if (diffHours <= 48) {
       return (
-        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
+        <span className="text-sm font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
           Besok
         </span>
       );
     }
     const days = Math.ceil(diffHours / 24);
     return (
-      <span className="text-xs font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+      <span className="text-sm font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
         {days} hari
       </span>
     );
   };
 
   return (
-    <div id="events-list" className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-4 scroll-mt-20">
+    <div
+      id="events-list"
+      className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-4 scroll-mt-20"
+    >
       {/* Header Minimalis */}
       <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
@@ -85,7 +88,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
           <h2 className="text-base font-bold text-slate-900">
             Agenda Kegiatan
           </h2>
-          <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+          <span className="text-sm font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
             {events.length}
           </span>
         </div>
@@ -94,10 +97,12 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
           type="button"
           onClick={onRefresh}
           disabled={isLoading}
-          className="inline-flex items-center gap-1.5 text-xs text-[#005eb8] hover:text-[#001d62] font-semibold py-1.5 px-2.5 rounded-md hover:bg-blue-50 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-sm text-[#005eb8] hover:text-[#001d62] font-semibold py-1.5 px-2.5 rounded-md hover:bg-blue-50 transition-colors cursor-pointer"
           title="Muat ulang agenda"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshCw
+            className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`}
+          />
           <span>Refresh</span>
         </button>
       </div>
@@ -116,7 +121,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
           <button
             type="button"
             onClick={() => setSearchQuery("")}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-400 hover:text-slate-700 p-1"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400 hover:text-slate-700 p-1"
           >
             &times;
           </button>
@@ -186,7 +191,10 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                   className="p-3.5 sm:p-4 cursor-pointer select-none group focus:outline-none space-y-2"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-semibold text-slate-700 truncate max-w-50" title={event.courseName}>
+                    <span
+                      className="text-sm font-semibold text-slate-700 truncate max-w-50"
+                      title={event.courseName}
+                    >
                       {event.courseName}
                     </span>
                     <div className="shrink-0 flex items-center gap-1.5">
@@ -203,7 +211,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                     {event.cleanTitle}
                   </h3>
 
-                  <div className="flex items-center justify-between gap-2 text-xs text-slate-500 pt-0.5">
+                  <div className="flex items-center justify-between gap-2 text-sm text-slate-500 pt-0.5">
                     <span className="flex items-center gap-1 text-slate-600 font-medium">
                       <Clock className="w-3.5 h-3.5 text-[#2c49b6] shrink-0" />
                       <span>
@@ -229,7 +237,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
 
                 {/* Expanded Details Minimalis */}
                 {isExpanded && (
-                  <div className="border-t border-slate-100 bg-slate-50/60 p-3.5 text-xs text-slate-600 space-y-2 animate-in fade-in duration-100">
+                  <div className="border-t border-slate-100 bg-slate-50/60 p-3.5 text-sm text-slate-600 space-y-2 animate-in fade-in duration-100">
                     {event.cleanDescription ? (
                       <p className="whitespace-pre-line leading-relaxed">
                         {event.cleanDescription}

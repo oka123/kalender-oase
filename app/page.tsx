@@ -22,11 +22,7 @@ import type {
   GoogleCalendarItem,
   SyncResult,
 } from "@/types/calendar";
-import {
-  AlertCircle,
-  CheckCircle2,
-  ShieldCheck,
-} from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 function DashboardContent() {
   const searchParams = useSearchParams();
@@ -340,7 +336,8 @@ function DashboardContent() {
                 Kalender OASE
               </h1>
               <p className="text-sm text-blue-100/90 leading-relaxed">
-                Sinkronisasi jadwal tugas dan kegiatan dari OASE Moodle ke Google Calendar secara otomatis.
+                Sinkronisasi jadwal tugas dan kegiatan dari OASE Moodle ke
+                Google Calendar secara otomatis.
               </p>
             </div>
 
@@ -412,12 +409,7 @@ function DashboardContent() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-sm text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-1.5 text-xs text-slate-500">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>Stateless &bull; Data Terlindungi</span>
-          </div>
-
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-end gap-4 ">
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
             <Link
               href="/privacy"
