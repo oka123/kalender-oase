@@ -1,8 +1,8 @@
-# OASE Academic Calendar Sync (Universitas Udayana)
+# Kalender OASE (Universitas Udayana)
 > Utilitas open-source untuk sinkronisasi otomatis jadwal akademik dari portal Moodle OASE Universitas Udayana ke Google Calendar.
 
 ## Deskripsi Singkat
-OASE Academic Calendar Sync adalah aplikasi berbasis web yang membantu mahasiswa dan dosen Universitas Udayana (UNUD) mengonversi dan menyinkronkan agenda perkuliahan, tenggat waktu tugas, kuis, serta ujian dari feed iCalendar (.ics) OASE Moodle langsung ke Google Calendar secara berkala.
+Kalender OASE adalah aplikasi berbasis web yang membantu mahasiswa dan dosen Universitas Udayana (UNUD) mengonversi dan menyinkronkan agenda perkuliahan, tenggat waktu tugas, kuis, serta ujian dari feed iCalendar (.ics) OASE Moodle langsung ke Google Calendar secara berkala.
 
 ## Fitur Utama
 - **Sinkronisasi Otomatis & Terjadwal**: Mendukung sinkronisasi manual satu-klik dan sinkronisasi otomatis harian via GitHub Actions workflow (webhook trigger).
@@ -18,7 +18,7 @@ OASE Academic Calendar Sync adalah aplikasi berbasis web yang membantu mahasiswa
 4. Pilih opsi **Export calendar**.
 5. Pada pilihan *Events to export*, pilih **All events**; pada *Time period*, pilih **Recent and next 60 days**.
 6. Klik tombol **Get calendar URL** lalu salin link yang dihasilkan.
-7. Tempelkan link tersebut pada kolom konfigurasi di aplikasi OASE Sync.
+7. Tempelkan link tersebut pada kolom konfigurasi di aplikasi Kalender OASE.
 
 ## Tautan Resmi & Navigasi
 - Beranda: https://kalender-oase.vercel.app/

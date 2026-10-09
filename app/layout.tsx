@@ -17,15 +17,15 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://kalender-oase.vercel
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'OASE Academic Calendar Sync | Universitas Udayana',
-    template: '%s | OASE Academic Calendar Sync',
+    default: 'Kalender OASE | Universitas Udayana',
+    template: '%s | Kalender OASE',
   },
   description:
     'Sinkronisasi otomatis jadwal perkuliahan, tenggat waktu tugas, kuis, dan ujian dari portal OASE Moodle Universitas Udayana ke Google Calendar dengan sekali klik.',
   keywords: [
+    'Kalender OASE',
     'OASE UNUD',
     'OASE Universitas Udayana',
-    'Kalender OASE',
     'Google Calendar OASE',
     'Sync OASE ke Google Calendar',
     'Kalender Akademik UNUD',
@@ -35,17 +35,17 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Informatika Universitas Udayana' }],
   creator: 'Civitas Akademika Universitas Udayana',
-  publisher: 'OASE Sync',
-  applicationName: 'OASE Calendar Sync',
+  publisher: 'Kalender OASE',
+  applicationName: 'Kalender OASE',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'OASE Academic Calendar Sync | Universitas Udayana',
+    title: 'Kalender OASE | Universitas Udayana',
     description:
       'Hubungkan dan sinkronkan agenda OASE Moodle UNUD ke Google Calendar Anda secara instan dan otomatis.',
     url: baseUrl,
-    siteName: 'OASE Calendar Sync',
+    siteName: 'Kalender OASE',
     locale: 'id_ID',
     type: 'website',
     images: [
@@ -53,13 +53,13 @@ export const metadata: Metadata = {
         url: '/logo.webp',
         width: 512,
         height: 512,
-        alt: 'OASE Academic Calendar Sync Logo Universitas Udayana',
+        alt: 'Logo Kalender OASE Universitas Udayana',
       },
     ],
   },
   twitter: {
     card: 'summary',
-    title: 'OASE Academic Calendar Sync | Universitas Udayana',
+    title: 'Kalender OASE | Universitas Udayana',
     description:
       'Sinkronisasi jadwal tugas, kuis, dan ujian dari OASE UNUD ke Google Calendar.',
     images: ['/logo.webp'],
@@ -91,7 +91,7 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'OASE Academic Calendar Sync',
+    name: 'Kalender OASE',
     url: baseUrl,
     description:
       'Aplikasi utilitas akademik untuk menyinkronkan jadwal perkuliahan dari OASE Moodle Universitas Udayana ke Google Calendar.',

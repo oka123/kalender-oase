@@ -336,7 +336,7 @@ function DashboardContent() {
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                OASE Academic Calendar Sync
+                Kalender OASE
               </h1>
               <p className="text-sm text-blue-100 leading-relaxed">
                 Sinkronisasikan seluruh tenggat pengumpulan tugas, jadwal kuis, UTS, dan UAS dari Moodle OASE (default: <strong>Informatika Kelas A Angkatan 2024</strong>) ke Google Calendar secara otomatis dengan notifikasi alarm pengingat.
@@ -418,7 +418,7 @@ function DashboardContent() {
             </Link>
             <span className="text-slate-300">&bull;</span>
             <p>
-              &copy; {new Date().getFullYear()} OASE Calendar Sync &bull;
+              &copy; {new Date().getFullYear()} Kalender OASE &bull;
               Universitas Udayana
             </p>
           </div>

@@ -38,7 +38,7 @@ export function Header({
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold tracking-tight text-lg text-white">
-                OASE Sync
+                Kalender OASE
               </span>
               <span className="hidden sm:inline-block text-sm uppercase font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-200 border border-blue-400/30">
                 UNUD Academic

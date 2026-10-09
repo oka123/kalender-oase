@@ -11,9 +11,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | OASE Academic Calendar Sync",
+  title: "Privacy Policy | Kalender OASE",
   description:
-    "Kebijakan Privasi untuk aplikasi OASE Academic Calendar Sync Universitas Udayana.",
+    "Kebijakan Privasi untuk aplikasi Kalender OASE Universitas Udayana.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
             <Logo size="md" priority className="border border-slate-200 shadow-2xs" />
             <div>
               <span className="font-bold text-base text-slate-900 block leading-tight">
-                OASE Sync
+                Kalender OASE
               </span>
               <span className="text-sm text-slate-500 block leading-tight">
                 Universitas Udayana
@@ -71,7 +71,7 @@ export default function PrivacyPolicyPage() {
               1. Pendahuluan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              OASE Academic Calendar Sync (&quot;Aplikasi&quot;) adalah alat bantu
+              Kalender OASE (&quot;Aplikasi&quot;) adalah alat bantu
               independen sumber terbuka (open-source) yang dikembangkan untuk
               membantu sivitas akademika Universitas Udayana menyinkronkan agenda
               perkuliahan, tenggat tugas, kuis, dan ujian dari sistem pembelajaran
@@ -151,7 +151,7 @@ export default function PrivacyPolicyPage() {
             <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 sm:p-5 space-y-3">
               <p className="text-sm text-blue-900 leading-relaxed">
                 Penggunaan dan transfer informasi yang diterima dari Google API oleh
-                OASE Academic Calendar Sync ke aplikasi lain mematuhi{" "}
+                Kalender OASE ke aplikasi lain mematuhi{" "}
                 <a
                   href="https://developers.google.com/terms/api-services-user-data-policy"
                   target="_blank"
@@ -224,7 +224,7 @@ export default function PrivacyPolicyPage() {
                     .
                   </li>
                   <li>
-                    Cari &quot;OASE Academic Calendar Sync&quot; pada daftar aplikasi pihak
+                    Cari &quot;Kalender OASE&quot; pada daftar aplikasi pihak
                     ketiga.
                   </li>
                   <li>Pilih opsi &quot;Hapus Akses&quot; (Remove Access).</li>
@@ -252,7 +252,7 @@ export default function PrivacyPolicyPage() {
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>
-            &copy; 2026 OASE Calendar Sync &bull; Universitas Udayana
+            &copy; 2026 Kalender OASE &bull; Universitas Udayana
           </p>
           <div className="flex items-center gap-4 text-sm font-medium">
             <Link href="/" className="hover:text-slate-800">

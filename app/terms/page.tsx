@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | OASE Academic Calendar Sync",
+  title: "Terms of Service | Kalender OASE",
   description:
-    "Syarat dan Ketentuan Layanan untuk aplikasi OASE Academic Calendar Sync Universitas Udayana.",
+    "Syarat dan Ketentuan Layanan untuk aplikasi Kalender OASE Universitas Udayana.",
 };
 
 export default function TermsOfServicePage() {
@@ -28,7 +28,7 @@ export default function TermsOfServicePage() {
             <Logo size="md" priority className="border border-slate-200 shadow-2xs" />
             <div>
               <span className="font-bold text-base text-slate-900 block leading-tight">
-                OASE Sync
+                Kalender OASE
               </span>
               <span className="text-sm text-slate-500 block leading-tight">
                 Universitas Udayana
@@ -70,7 +70,7 @@ export default function TermsOfServicePage() {
               1. Penerimaan Syarat dan Ketentuan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Dengan mengakses dan menggunakan aplikasi OASE Academic Calendar Sync
+              Dengan mengakses dan menggunakan aplikasi Kalender OASE
               (&quot;Layanan&quot;), Anda menyatakan bahwa Anda telah membaca, memahami,
               dan menyetujui untuk terikat oleh Syarat dan Ketentuan Layanan ini serta
               Kebijakan Privasi kami. Jika Anda tidak menyetujui ketentuan ini, Anda
@@ -85,7 +85,7 @@ export default function TermsOfServicePage() {
               2. Deskripsi Layanan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              OASE Academic Calendar Sync adalah aplikasi utilitas non-komersial
+              Kalender OASE adalah aplikasi utilitas non-komersial
               sumber terbuka yang dirancang untuk memfasilitasi sinkronisasi jadwal
               akademik (seperti deadline tugas, kuis, dan ujian) dari feed iCalendar
               portal pembelajaran daring OASE Universitas Udayana ke akun Google
@@ -208,8 +208,8 @@ export default function TermsOfServicePage() {
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
               Jika Anda memiliki pertanyaan mengenai Ketentuan Layanan ini, silakan
-              buat isu (issue) melalui repositori GitHub resmi proyek OASE Calendar
-              Sync atau hubungi pengembang.
+              buat isu (issue) melalui repositori GitHub resmi proyek Kalender
+              OASE atau hubungi pengembang.
             </p>
           </section>
         </div>
@@ -219,7 +219,7 @@ export default function TermsOfServicePage() {
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>
-            &copy; 2026 OASE Calendar Sync &bull; Universitas Udayana
+            &copy; 2026 Kalender OASE &bull; Universitas Udayana
           </p>
           <div className="flex items-center gap-4 text-sm font-medium">
             <Link href="/" className="hover:text-slate-800">

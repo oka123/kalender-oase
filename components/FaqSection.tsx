@@ -10,9 +10,9 @@ interface FaqItem {
 
 const FAQS: FaqItem[] = [
   {
-    question: "Apa itu OASE Academic Calendar Sync Universitas Udayana?",
+    question: "Apa itu Kalender OASE Universitas Udayana?",
     answer:
-      "OASE Academic Calendar Sync adalah aplikasi utilitas sumber terbuka yang menghubungkan sistem pembelajaran daring OASE Moodle Universitas Udayana ke Google Calendar. Aplikasi ini mengekstrak feed iCal resmi untuk menyinkronkan jadwal tugas, kuis, dan ujian secara otomatis dan terjadwal.",
+      "Kalender OASE adalah aplikasi utilitas sumber terbuka yang menghubungkan sistem pembelajaran daring OASE Moodle Universitas Udayana ke Google Calendar. Aplikasi ini mengekstrak feed iCal resmi untuk menyinkronkan jadwal tugas, kuis, dan ujian secara otomatis dan terjadwal.",
   },
   {
     question: "Bagaimana cara mendapatkan URL Kalender dari OASE UNUD?",

@@ -28,7 +28,7 @@ export function buildEventDescription(event: OaseEvent): string {
     parts.push(`\n📝 Catatan / Instruksi:\n${event.cleanDescription}`);
   }
 
-  parts.push('\n---\nSinkronisasi otomatis oleh OASE Academic Calendar Sync');
+  parts.push('\n---\nSinkronisasi otomatis oleh Kalender OASE');
   return parts.join('\n');
 }
 

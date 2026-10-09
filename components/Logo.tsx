@@ -40,7 +40,7 @@ export function Logo({
     >
       <Image
         src="/logo.webp"
-        alt="Logo OASE Academic Calendar Sync Universitas Udayana"
+        alt="Logo Kalender OASE Universitas Udayana"
         width={dimension}
         height={dimension}
         priority={priority}
