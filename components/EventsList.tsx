@@ -186,7 +186,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                   className="p-3.5 sm:p-4 cursor-pointer select-none group focus:outline-none space-y-2"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-semibold text-slate-700 truncate max-w-[200px]" title={event.courseName}>
+                    <span className="text-xs font-semibold text-slate-700 truncate max-w-50" title={event.courseName}>
                       {event.courseName}
                     </span>
                     <div className="shrink-0 flex items-center gap-1.5">

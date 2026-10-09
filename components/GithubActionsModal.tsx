@@ -75,11 +75,10 @@ export function GithubActionsModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-slate-800">
-                Setup Otomatisasi GitHub Actions $\rightarrow$ Vercel Webhook
+                Otomatisasi GitHub Actions
               </h3>
-              <p className="text-sm text-slate-500">
-                GitHub Actions memicu sinkronisasi ke server Vercel Anda setiap
-                2 jam sekali.
+              <p className="text-xs sm:text-sm text-slate-500">
+                Pemicu sinkronisasi berkala ke Google Calendar di latar belakang.
               </p>
             </div>
           </div>

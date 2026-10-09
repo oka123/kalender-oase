@@ -168,7 +168,7 @@ export function SecurityCaptcha({ onVerifyChange }: SecurityCaptchaProps) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-800">
           <ShieldCheck className="w-4 h-4 text-[#2c49b6]" />
-          <span>Verifikasi Keamanan Manusia (Cloudflare Turnstile)</span>
+          <span>Verifikasi Keamanan</span>
         </div>
         {isWidgetReady && (
           <button
@@ -186,7 +186,7 @@ export function SecurityCaptcha({ onVerifyChange }: SecurityCaptchaProps) {
       {isLoading ? (
         <div className="py-3 flex items-center justify-center gap-2 text-xs text-slate-500">
           <div className="w-3.5 h-3.5 border-2 border-[#2c49b6] border-t-transparent rounded-full animate-spin" />
-          <span>Menyiapkan Cloudflare Turnstile...</span>
+          <span>Menyiapkan verifikasi...</span>
         </div>
       ) : siteKey ? (
         <div className="space-y-2">
@@ -195,7 +195,7 @@ export function SecurityCaptcha({ onVerifyChange }: SecurityCaptchaProps) {
           {isVerified && (
             <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-700 font-semibold pt-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Verifikasi Cloudflare berhasil. Siap disinkronkan.</span>
+              <span>Verifikasi berhasil. Siap disinkronkan.</span>
             </div>
           )}
 

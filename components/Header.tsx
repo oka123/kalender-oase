@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Logo } from "@/components/Logo";
-import { LogIn, LogOut, CheckCircle2, User, GitBranch } from "lucide-react";
+import { LogIn, LogOut, User, GitBranch } from "lucide-react";
 
 interface HeaderProps {
   user: {
@@ -71,13 +71,12 @@ export function Header({
                 </div>
               )}
               <div className="hidden md:block text-left text-sm leading-tight">
-                <div className="font-medium text-white flex items-center gap-1.5">
-                  <span className="truncate max-w-37.5">
+                <div className="font-medium text-white">
+                  <span className="truncate max-w-37.5 block">
                     {user.name || user.email}
                   </span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 </div>
-                <div className="text-sm text-slate-300 truncate max-w-37.5">
+                <div className="text-xs text-blue-200/70 truncate max-w-37.5">
                   {user.email}
                 </div>
               </div>

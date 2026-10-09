@@ -26,7 +26,6 @@ import {
   AlertCircle,
   CheckCircle2,
   ShieldCheck,
-  GraduationCap,
 } from "lucide-react";
 
 function DashboardContent() {
@@ -336,16 +335,7 @@ function DashboardContent() {
         {/* Hero Banner Pendahuluan */}
         <div className="bg-linear-to-r from-[#001d62] via-[#204c96] to-[#005eb8] text-white rounded-xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="max-w-2xl space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-blue-100 border border-white/20">
-                  <GraduationCap className="w-4 h-4 text-amber-300" />
-                  <span>Universitas Udayana</span>
-                </div>
-                {/* <span className="text-sm font-bold px-3 py-1 rounded-full bg-amber-400/20 text-amber-200 border border-amber-300/30">
-                  Tersedia untuk Seluruh Mahasiswa UNUD
-                </span> */}
-              </div>
+            <div className="max-w-2xl space-y-2">
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 Kalender OASE
               </h1>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import {
-  ShieldCheck,
   Lock,
   ArrowLeft,
   KeyRound,
@@ -54,17 +53,13 @@ export default function PrivacyPolicyPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 flex-1 w-full">
         <div className="bg-white rounded-2xl shadow-xs border border-slate-200/80 p-6 sm:p-10 space-y-8">
           {/* Header Title */}
-          <div className="border-b border-slate-200 pb-6 space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-medium">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Privasi & Keamanan Data Pengguna</span>
-            </div>
+          <div className="border-b border-slate-200 pb-6 space-y-1">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Privacy Policy (Kebijakan Privasi)
             </h1>
-            <p className="text-sm text-slate-500">
+            {/* <p className="text-sm text-slate-500">
               Terakhir diperbarui: 9 Oktober 2026
-            </p>
+            </p> */}
           </div>
 
           {/* Section: Pendahuluan */}
