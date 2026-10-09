@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import {
-  Lock,
-  ArrowLeft,
-  KeyRound,
-  EyeOff,
-  ExternalLink,
-} from "lucide-react";
+import { Lock, ArrowLeft, KeyRound, EyeOff, ExternalLink } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Kalender OASE",
@@ -28,7 +22,11 @@ export default function PrivacyPolicyPage() {
             href="/"
             className="flex items-center gap-3 group text-slate-800 hover:text-[#001d62] transition-colors"
           >
-            <Logo size="md" priority className="border border-slate-200 shadow-2xs" />
+            <Logo
+              size="md"
+              priority
+              className="border border-slate-200 shadow-2xs"
+            />
             <div>
               <span className="font-bold text-base text-slate-900 block leading-tight">
                 Kalender OASE
@@ -57,9 +55,6 @@ export default function PrivacyPolicyPage() {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Privacy Policy (Kebijakan Privasi)
             </h1>
-            <p className="text-sm text-slate-500">
-              Terakhir diperbarui: 9 Oktober 2026
-            </p>
           </div>
 
           {/* Section: Pendahuluan */}
@@ -71,14 +66,14 @@ export default function PrivacyPolicyPage() {
             <p className="text-sm text-slate-600 leading-relaxed">
               Kalender OASE (&quot;Aplikasi&quot;) adalah proyek independen yang
               dikembangkan untuk membantu sivitas akademika Universitas Udayana
-              menyinkronkan jadwal perkuliahan, tenggat tugas, kuis, dan ujian dari
-              portal OASE Moodle ke Google Calendar pribadi.
+              menyinkronkan jadwal perkuliahan, tenggat tugas, kuis, dan ujian
+              dari portal OASE Moodle ke Google Calendar pribadi.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Kami menghargai privasi Anda dan berkomitmen penuh untuk melindungi
-              data pribadi Anda. Kebijakan Privasi ini menjelaskan bagaimana
-              Aplikasi memproses dan melindungi informasi Anda sesuai dengan
-              standar keamanan dan Google API Services User Data Policy.
+              Kami menghargai privasi Anda dan berkomitmen penuh untuk
+              melindungi data pribadi Anda. Kebijakan Privasi ini menjelaskan
+              bagaimana Aplikasi memproses dan melindungi informasi Anda sesuai
+              dengan standar keamanan dan Google API Services User Data Policy.
             </p>
           </section>
 
@@ -89,24 +84,33 @@ export default function PrivacyPolicyPage() {
               2. Data yang Diakses dan Diperlukan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Untuk menyediakan fungsi sinkronisasi kalender, Aplikasi meminta izin
-              otorisasi Google OAuth dengan cakupan (scopes) terbatas berikut:
+              Untuk menyediakan fungsi sinkronisasi kalender, Aplikasi meminta
+              izin otorisasi Google OAuth dengan cakupan (scopes) terbatas
+              berikut:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-sm text-slate-600 leading-relaxed">
               <li>
-                <strong className="text-slate-800">Profil Akun Google (Email &amp; Profil Dasar):</strong>{" "}
+                <strong className="text-slate-800">
+                  Profil Akun Google (Email &amp; Profil Dasar):
+                </strong>{" "}
                 Digunakan untuk menampilkan identitas akun yang sedang aktif
                 (nama, alamat email, dan foto profil) pada antarmuka aplikasi.
               </li>
               <li>
-                <strong className="text-slate-800">Google Calendar API (events):</strong>{" "}
+                <strong className="text-slate-800">
+                  Google Calendar API (events):
+                </strong>{" "}
                 Digunakan untuk menambahkan jadwal baru, memperbarui agenda yang
-                berubah, dan memastikan tidak ada duplikasi jadwal di Google Calendar Anda.
+                berubah, dan memastikan tidak ada duplikasi jadwal di Google
+                Calendar Anda.
               </li>
               <li>
-                <strong className="text-slate-800">URL Kalender OASE (iCal Feed):</strong>{" "}
-                URL kalender iCal dari OASE Moodle hanya digunakan oleh server untuk
-                mengambil dan membaca jadwal perkuliahan format .ics milik Anda.
+                <strong className="text-slate-800">
+                  URL Kalender OASE (iCal Feed):
+                </strong>{" "}
+                URL kalender iCal dari OASE Moodle hanya digunakan oleh server
+                untuk mengambil dan membaca jadwal perkuliahan format .ics milik
+                Anda.
               </li>
             </ul>
           </section>
@@ -123,16 +127,27 @@ export default function PrivacyPolicyPage() {
                 <span>Tanpa Database Pengguna (Stateless Architecture)</span>
               </div>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Aplikasi ini tidak menyimpan data pribadi Anda di database server.
-                Token sesi Google disimpan dalam bentuk cookie HTTP-only yang dienkripsi
-                menggunakan algoritma{" "}
-                <span className="font-mono text-slate-800 font-medium">AES-256-GCM</span>{" "}
+                Aplikasi ini tidak menyimpan data pribadi Anda di database
+                server. Token sesi Google disimpan dalam bentuk cookie HTTP-only
+                yang dienkripsi menggunakan algoritma{" "}
+                <span className="font-mono text-slate-800 font-medium">
+                  AES-256-GCM
+                </span>{" "}
                 pada browser Anda sendiri.
               </p>
               <ul className="list-disc pl-6 space-y-1 text-sm text-slate-600">
-                <li>Kami tidak pernah menyimpan password OASE maupun password akun Google Anda.</li>
-                <li>Kami tidak mengumpulkan atau merekam log aktivitas pribadi Anda.</li>
-                <li>Saat Anda menekan tombol Sign out, seluruh sesi dan token langsung dihapus dari browser.</li>
+                <li>
+                  Kami tidak pernah menyimpan password OASE maupun password akun
+                  Google Anda.
+                </li>
+                <li>
+                  Kami tidak mengumpulkan atau merekam log aktivitas pribadi
+                  Anda.
+                </li>
+                <li>
+                  Saat Anda menekan tombol Sign out, seluruh sesi dan token
+                  langsung dihapus dari browser.
+                </li>
               </ul>
             </div>
           </section>
@@ -145,8 +160,8 @@ export default function PrivacyPolicyPage() {
             </h2>
             <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 sm:p-5 space-y-3">
               <p className="text-sm text-blue-900 leading-relaxed">
-                Penggunaan informasi yang diterima dari Google API oleh Kalender OASE
-                mematuhi ketentuan{" "}
+                Penggunaan informasi yang diterima dari Google API oleh Kalender
+                OASE mematuhi ketentuan{" "}
                 <a
                   href="https://developers.google.com/terms/api-services-user-data-policy"
                   target="_blank"
@@ -160,16 +175,19 @@ export default function PrivacyPolicyPage() {
               </p>
               <ul className="list-disc pl-6 space-y-1.5 text-sm text-blue-800">
                 <li>
-                  Data pengguna tidak akan pernah dijual atau dialihkan ke pihak ketiga.
+                  Data pengguna tidak akan pernah dijual atau dialihkan ke pihak
+                  ketiga.
                 </li>
                 <li>
                   Data tidak digunakan untuk keperluan iklan atau pemasaran.
                 </li>
                 <li>
-                  Data tidak digunakan untuk pelatihan model kecerdasan buatan (AI / machine learning).
+                  Data tidak digunakan untuk pelatihan model kecerdasan buatan
+                  (AI / machine learning).
                 </li>
                 <li>
-                  Akses data kalender hanya dilakukan untuk keperluan sinkronisasi atas persetujuan pengguna.
+                  Akses data kalender hanya dilakukan untuk keperluan
+                  sinkronisasi atas persetujuan pengguna.
                 </li>
               </ul>
             </div>
@@ -184,10 +202,11 @@ export default function PrivacyPolicyPage() {
             <div className="flex items-start gap-3">
               <EyeOff className="w-5 h-5 text-slate-500 shrink-0 mt-0.5" />
               <p className="text-sm text-slate-600 leading-relaxed">
-                Kami tidak membagikan, menyewakan, atau menjual informasi Anda kepada
-                pihak ketiga. Komunikasi data berlangsung langsung dan terenkripsi
-                melalui koneksi aman HTTPS antara browser Anda, server aplikasi, portal
-                OASE UNUD, dan server resmi Google Calendar.
+                Kami tidak membagikan, menyewakan, atau menjual informasi Anda
+                kepada pihak ketiga. Komunikasi data berlangsung langsung dan
+                terenkripsi melalui koneksi aman HTTPS antara browser Anda,
+                server aplikasi, portal OASE UNUD, dan server resmi Google
+                Calendar.
               </p>
             </div>
           </section>
@@ -202,8 +221,9 @@ export default function PrivacyPolicyPage() {
               <KeyRound className="w-5 h-5 text-slate-500 shrink-0 mt-0.5" />
               <div className="space-y-2 text-sm text-slate-600 leading-relaxed">
                 <p>
-                  Anda memegang kendali penuh atas akun Google Anda. Anda dapat mencabut
-                  izin akses aplikasi ini ke Google Calendar kapan saja melalui langkah berikut:
+                  Anda memegang kendali penuh atas akun Google Anda. Anda dapat
+                  mencabut izin akses aplikasi ini ke Google Calendar kapan saja
+                  melalui langkah berikut:
                 </p>
                 <ol className="list-decimal pl-6 space-y-1">
                   <li>
@@ -219,11 +239,10 @@ export default function PrivacyPolicyPage() {
                     .
                   </li>
                   <li>
-                    Pilih &quot;Kalender OASE&quot; pada daftar aplikasi pihak ketiga.
+                    Pilih &quot;Kalender OASE&quot; pada daftar aplikasi pihak
+                    ketiga.
                   </li>
-                  <li>
-                    Klik tombol &quot;Hapus Akses&quot; (Remove Access).
-                  </li>
+                  <li>Klik tombol &quot;Hapus Akses&quot; (Remove Access).</li>
                 </ol>
               </div>
             </div>
@@ -236,8 +255,17 @@ export default function PrivacyPolicyPage() {
               7. Kontak &amp; Dukungan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi ini, silakan
-              hubungi tim pengembang melalui repositori GitHub resmi Kalender OASE.
+              Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi ini,
+              silakan hubungi tim pengembang melalui{" "}
+              <a
+                href="https://github.com/oka123/kalender-oase"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#001d62] font-semibold underline hover:text-[#2c49b6]"
+              >
+                repositori GitHub Kalender OASE
+              </a>
+              .
             </p>
           </section>
         </div>
@@ -246,13 +274,19 @@ export default function PrivacyPolicyPage() {
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>
-            &copy; 2026 Kalender OASE &bull; Universitas Udayana
-          </p>
+          <p>&copy; 2026 Kalender OASE &bull; Universitas Udayana</p>
           <div className="flex items-center gap-4 text-sm font-medium">
             <Link href="/" className="hover:text-slate-800">
               Beranda
             </Link>
+            <a
+              href="https://github.com/oka123/kalender-oase"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-slate-800 transition-colors"
+            >
+              GitHub
+            </a>
             <Link href="/terms" className="hover:text-slate-800">
               Terms of Service
             </Link>

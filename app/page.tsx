@@ -411,6 +411,15 @@ function DashboardContent() {
       <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-sm text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-end gap-4 ">
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
+            <a
+              href="https://github.com/oka123/kalender-oase"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-slate-900 hover:underline transition-colors"
+            >
+              GitHub
+            </a>
+            <span className="text-slate-300">&bull;</span>
             <Link
               href="/privacy"
               className="hover:text-slate-900 hover:underline transition-colors"

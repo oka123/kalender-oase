@@ -57,7 +57,7 @@ export function IcalConfigCard({
           className="inline-flex items-center gap-1.5 text-sm text-[#005eb8] hover:text-[#001d62] font-semibold cursor-pointer"
         >
           <HelpCircle className="w-3.5 h-3.5" />
-          <span>Panduan Export URL</span>
+          <span>Tutorial Export URL</span>
           {showGuide ? (
             <ChevronUp className="w-3 h-3" />
           ) : (

@@ -27,7 +27,11 @@ export default function TermsOfServicePage() {
             href="/"
             className="flex items-center gap-3 group text-slate-800 hover:text-[#001d62] transition-colors"
           >
-            <Logo size="md" priority className="border border-slate-200 shadow-2xs" />
+            <Logo
+              size="md"
+              priority
+              className="border border-slate-200 shadow-2xs"
+            />
             <div>
               <span className="font-bold text-base text-slate-900 block leading-tight">
                 Kalender OASE
@@ -56,9 +60,6 @@ export default function TermsOfServicePage() {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Terms of Service (Syarat dan Ketentuan)
             </h1>
-            <p className="text-sm text-slate-500">
-              Terakhir diperbarui: 9 Oktober 2026
-            </p>
           </div>
 
           {/* Section 1: Penerimaan Ketentuan */}
@@ -69,10 +70,11 @@ export default function TermsOfServicePage() {
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
               Dengan mengakses dan menggunakan aplikasi Kalender OASE
-              (&quot;Layanan&quot;), Anda menyatakan bahwa Anda telah membaca, memahami,
-              dan menyetujui untuk terikat oleh Syarat dan Ketentuan Layanan ini serta
-              Kebijakan Privasi kami. Jika Anda tidak menyetujui ketentuan ini, Anda
-              diminta untuk tidak menggunakan Layanan ini.
+              (&quot;Layanan&quot;), Anda menyatakan bahwa Anda telah membaca,
+              memahami, dan menyetujui untuk terikat oleh Syarat dan Ketentuan
+              Layanan ini serta Kebijakan Privasi kami. Jika Anda tidak
+              menyetujui ketentuan ini, Anda diminta untuk tidak menggunakan
+              Layanan ini.
             </p>
           </section>
 
@@ -83,10 +85,11 @@ export default function TermsOfServicePage() {
               2. Deskripsi Layanan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Kalender OASE adalah aplikasi utilitas non-komersial
-              yang dirancang untuk memfasilitasi sinkronisasi jadwal
-              akademik (seperti deadline tugas, kuis, dan ujian) dari feed iCalendar
-              portal OASE Universitas Udayana ke akun Google Calendar pribadi pengguna.
+              Kalender OASE adalah aplikasi utilitas non-komersial yang
+              dirancang untuk memfasilitasi sinkronisasi jadwal akademik
+              (seperti deadline tugas, kuis, dan ujian) dari feed iCalendar
+              portal OASE Universitas Udayana ke akun Google Calendar pribadi
+              pengguna.
             </p>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
               <div className="flex items-center gap-2 text-slate-800 font-semibold text-sm">
@@ -94,10 +97,17 @@ export default function TermsOfServicePage() {
                 <span>Fitur Utama Layanan:</span>
               </div>
               <ul className="list-disc pl-6 space-y-1 text-sm text-slate-600">
-                <li>Sinkronisasi otomatis jadwal dari link export OASE Moodle (.ics).</li>
-                <li>Pembuatan dan pembaruan agenda secara rapi di Google Calendar.</li>
+                <li>
+                  Sinkronisasi otomatis jadwal dari link export OASE Moodle
+                  (.ics).
+                </li>
+                <li>
+                  Pembuatan dan pembaruan agenda secara rapi di Google Calendar.
+                </li>
                 <li>Pengaturan notifikasi pengingat sebelum tenggat waktu.</li>
-                <li>Dukungan sinkronisasi otomatis terjadwal via GitHub Actions.</li>
+                <li>
+                  Dukungan sinkronisasi otomatis terjadwal via GitHub Actions.
+                </li>
               </ul>
             </div>
           </section>
@@ -121,9 +131,9 @@ export default function TermsOfServicePage() {
                 sendiri atau kelas perkuliahan Anda yang sah.
               </li>
               <li>
-                Tidak menggunakan Layanan untuk tujuan yang melanggar hukum, merusak
-                infrastruktur server, atau mengganggu operasional sistem Universitas
-                Udayana maupun Google LLC.
+                Tidak menggunakan Layanan untuk tujuan yang melanggar hukum,
+                merusak infrastruktur server, atau mengganggu operasional sistem
+                Universitas Udayana maupun Google LLC.
               </li>
             </ul>
           </section>
@@ -141,11 +151,11 @@ export default function TermsOfServicePage() {
               </div>
               <p className="text-sm text-amber-800 leading-relaxed">
                 Layanan ini merupakan proyek perangkat lunak independen yang
-                dikembangkan oleh mahasiswa. Layanan ini{" "}
-                <strong>TIDAK</strong> berafiliasi resmi, didukung oleh, atau
-                merupakan representasi dari Universitas Udayana maupun Google LLC.
-                Nama OASE, Universitas Udayana, dan Google Calendar digunakan
-                semata-mata untuk tujuan deskriptif kompatibilitas sistem.
+                dikembangkan oleh mahasiswa. Layanan ini <strong>TIDAK</strong>{" "}
+                berafiliasi resmi, didukung oleh, atau merupakan representasi
+                dari Universitas Udayana maupun Google LLC. Nama OASE,
+                Universitas Udayana, dan Google Calendar digunakan semata-mata
+                untuk tujuan deskriptif kompatibilitas sistem.
               </p>
             </div>
           </section>
@@ -157,27 +167,30 @@ export default function TermsOfServicePage() {
               5. Batasan Tanggung Jawab
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              LAYANAN DISEDIAKAN &quot;SEBAGAIMANA ADANYA&quot; (<em>AS IS</em>) DAN
-              &quot;SEBAGAIMANA TERSEDIA&quot; (<em>AS AVAILABLE</em>) TANPA JAMINAN
-              DALAM BENTUK APA PUN.
+              LAYANAN DISEDIAKAN &quot;SEBAGAIMANA ADANYA&quot; (<em>AS IS</em>)
+              DAN &quot;SEBAGAIMANA TERSEDIA&quot; (<em>AS AVAILABLE</em>) TANPA
+              JAMINAN DALAM BENTUK APA PUN.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
               Pengembang tidak bertanggung jawab atas:
             </p>
             <ul className="list-disc pl-6 space-y-1.5 text-sm text-slate-600 leading-relaxed">
               <li>
-                Keterlambatan atau kekeliruan pengumpulan tugas kuliah akibat perbedaan waktu atau perubahan jadwal mendadak oleh dosen.
+                Keterlambatan atau kekeliruan pengumpulan tugas kuliah akibat
+                perbedaan waktu atau perubahan jadwal mendadak oleh dosen.
               </li>
               <li>
-                Gangguan ketersediaan pada server OASE Moodle atau Google Calendar API.
+                Gangguan ketersediaan pada server OASE Moodle atau Google
+                Calendar API.
               </li>
               <li>
-                Kerusakan atau kehilangan agenda kalender di luar kendali wajar aplikasi.
+                Kerusakan atau kehilangan agenda kalender di luar kendali wajar
+                aplikasi.
               </li>
             </ul>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Pengguna disarankan untuk tetap memverifikasi tenggat waktu tugas secara
-              berkala langsung di portal resmi OASE UNUD.
+              Pengguna disarankan untuk tetap memverifikasi tenggat waktu tugas
+              secara berkala langsung di portal resmi OASE UNUD.
             </p>
           </section>
 
@@ -190,8 +203,8 @@ export default function TermsOfServicePage() {
             <p className="text-sm text-slate-600 leading-relaxed">
               Kami dapat memperbarui Syarat dan Ketentuan ini sewaktu-waktu.
               Perubahan berlaku efektif setelah dipublikasikan pada halaman ini.
-              Penggunaan berkelanjutan atas Layanan ini menandakan persetujuan Anda
-              terhadap ketentuan yang diperbarui.
+              Penggunaan berkelanjutan atas Layanan ini menandakan persetujuan
+              Anda terhadap ketentuan yang diperbarui.
             </p>
           </section>
 
@@ -202,8 +215,17 @@ export default function TermsOfServicePage() {
               7. Kontak &amp; Dukungan
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Jika Anda memiliki pertanyaan mengenai Ketentuan Layanan ini, silakan
-              hubungi tim pengembang melalui repositori GitHub resmi Kalender OASE.
+              Jika Anda memiliki pertanyaan mengenai Ketentuan Layanan ini,
+              silakan hubungi tim pengembang melalui{" "}
+              <a
+                href="https://github.com/oka123/kalender-oase"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#001d62] font-semibold underline hover:text-[#2c49b6]"
+              >
+                repositori GitHub Kalender OASE
+              </a>
+              .
             </p>
           </section>
         </div>
@@ -212,13 +234,19 @@ export default function TermsOfServicePage() {
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>
-            &copy; 2026 Kalender OASE &bull; Universitas Udayana
-          </p>
+          <p>&copy; 2026 Kalender OASE &bull; Universitas Udayana</p>
           <div className="flex items-center gap-4 text-sm font-medium">
             <Link href="/" className="hover:text-slate-800">
               Beranda
             </Link>
+            <a
+              href="https://github.com/oka123/kalender-oase"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-slate-800 transition-colors"
+            >
+              GitHub
+            </a>
             <Link href="/terms" className="text-[#001d62] font-semibold">
               Terms of Service
             </Link>
