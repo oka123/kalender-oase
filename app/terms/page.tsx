@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Terms of Service | Kalender OASE",
   description:
     "Syarat dan Ketentuan Layanan untuk aplikasi Kalender OASE Universitas Udayana.",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsOfServicePage() {

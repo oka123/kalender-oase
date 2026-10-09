@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   publisher: 'Kalender OASE',
   applicationName: 'Kalender OASE',
   alternates: {
-    canonical: '/',
+    canonical: './',
   },
   openGraph: {
     title: 'Kalender OASE | Universitas Udayana',

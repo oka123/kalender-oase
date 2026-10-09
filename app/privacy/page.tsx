@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Privacy Policy | Kalender OASE",
   description:
     "Kebijakan Privasi untuk aplikasi Kalender OASE Universitas Udayana.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 export default function PrivacyPolicyPage() {
