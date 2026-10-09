@@ -8,7 +8,6 @@ export function buildEventDescription(event: OaseEvent): string {
   const parts: string[] = [];
 
   parts.push(`📚 Mata Kuliah: ${event.courseName}`);
-  parts.push(`🏷️ Kategori: ${event.eventType.toUpperCase()}`);
 
   if (event.url) {
     parts.push(`🔗 Buka di OASE: ${event.url}`);

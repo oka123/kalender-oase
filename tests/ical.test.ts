@@ -16,23 +16,26 @@ test('normalizeIcalUrl converts webcal:// to https:// and trims whitespace', () 
   assert.equal(normalizeIcalUrl(httpsInput), httpsInput);
 });
 
-test('parseEventSummary identifies deadlines, exams, and quizzes accurately', () => {
+test('parseEventSummary identifies clean title and deadlines accurately without invalid category heuristics', () => {
   const assignment = parseEventSummary('Tugas Kelompok is due');
   assert.equal(assignment.cleanTitle, 'Tugas Kelompok');
   assert.equal(assignment.isDeadline, true);
-  assert.equal(assignment.eventType, 'assignment');
+  assert.equal(assignment.eventType, 'general');
 
   const quizOpen = parseEventSummary('K1\\, Kuis opens');
-  assert.equal(quizOpen.eventType, 'quiz');
+  assert.equal(quizOpen.cleanTitle, 'K1\\, Kuis opens');
   assert.equal(quizOpen.isDeadline, false);
+  assert.equal(quizOpen.eventType, 'general');
 
   const quizClose = parseEventSummary('K1\\, Kuis closes');
-  assert.equal(quizClose.eventType, 'quiz');
+  assert.equal(quizClose.cleanTitle, 'K1\\, Kuis closes');
   assert.equal(quizClose.isDeadline, true);
+  assert.equal(quizClose.eventType, 'general');
 
   const exam = parseEventSummary('UTS. Laporan Case Solving is due');
-  assert.equal(exam.eventType, 'exam');
+  assert.equal(exam.cleanTitle, 'UTS. Laporan Case Solving');
   assert.equal(exam.isDeadline, true);
+  assert.equal(exam.eventType, 'general');
 });
 
 test('parseEventDescription extracts clean text and Moodle links correctly', () => {
@@ -76,7 +79,7 @@ test('parseIcalData parses sample Moodle iCal content successfully', () => {
   const firstEvent = events.find((e) => e.uid.startsWith('48240'));
   assert.ok(firstEvent, 'Event 48240 should exist');
   assert.equal(firstEvent.cleanTitle, 'Tugas Kelompok');
-  assert.equal(firstEvent.eventType, 'assignment');
+  assert.equal(firstEvent.eventType, 'general');
   assert.equal(firstEvent.isDeadline, true);
   assert.ok(firstEvent.url?.includes('oase.unud.ac.id'));
 

@@ -71,3 +71,29 @@ test('isEventChanged detects summary and time modifications', () => {
   };
   assert.equal(isEventChanged(existingDifferentSummary, incoming, formattedDesc), true);
 });
+
+test('buildEventDescription formats course and notes cleanly without category field', async () => {
+  const { buildEventDescription } = await import('../lib/diff.ts');
+
+  const event: OaseEvent = {
+    uid: '12345@oase.unud.ac.id',
+    summary: 'Tugas 1 is due',
+    cleanTitle: 'Tugas 1',
+    description: '',
+    cleanDescription: 'Kerjakan soal 1-5',
+    courseName: 'Basis Data',
+    eventType: 'general',
+    start: new Date('2026-10-10T12:00:00Z'),
+    end: new Date('2026-10-10T12:00:00Z'),
+    isDeadline: true,
+    url: 'https://oase.unud.ac.id/mod/assign/view.php?id=123',
+    links: [],
+  };
+
+  const desc = buildEventDescription(event);
+
+  assert.ok(desc.includes('📚 Mata Kuliah: Basis Data'));
+  assert.ok(desc.includes('🔗 Buka di OASE: https://oase.unud.ac.id/mod/assign/view.php?id=123'));
+  assert.ok(desc.includes('📝 Catatan / Instruksi:\nKerjakan soal 1-5'));
+  assert.equal(desc.includes('Kategori:'), false, 'Deskripsi tidak boleh mencantumkan label Kategori');
+});

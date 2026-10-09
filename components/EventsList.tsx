@@ -9,11 +9,8 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
-  FileCheck2,
-  HelpCircle,
-  AlertTriangle,
 } from "lucide-react";
-import type { OaseEvent, OaseEventType } from "@/types/calendar";
+import type { OaseEvent } from "@/types/calendar";
 
 interface EventsListProps {
   events: OaseEvent[];
@@ -23,7 +20,7 @@ interface EventsListProps {
 
 export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState<OaseEventType | "all">(
+  const [filterMode, setFilterMode] = useState<"all" | "deadline" | "agenda">(
     "all",
   );
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -31,8 +28,11 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
   // Filter & Search
   const filteredEvents = useMemo(() => {
     return events.filter((ev) => {
-      // Filter tipe
-      if (selectedType !== "all" && ev.eventType !== selectedType) {
+      // Filter status deadline/agenda
+      if (filterMode === "deadline" && !ev.isDeadline) {
+        return false;
+      }
+      if (filterMode === "agenda" && ev.isDeadline) {
         return false;
       }
 
@@ -47,46 +47,10 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
 
       return true;
     });
-  }, [events, selectedType, searchQuery]);
+  }, [events, filterMode, searchQuery]);
 
   const toggleExpand = (uid: string) => {
     setExpandedId((prev) => (prev === uid ? null : uid));
-  };
-
-  // Badge jenis kegiatan
-  const getTypeBadge = (type: OaseEventType) => {
-    switch (type) {
-      case "assignment":
-        return (
-          <span className="inline-flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#2c49b6] border border-blue-200">
-            <FileCheck2 className="w-3 h-3" /> Tugas
-          </span>
-        );
-      case "quiz":
-        return (
-          <span className="inline-flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
-            <HelpCircle className="w-3 h-3" /> Kuis
-          </span>
-        );
-      case "exam":
-        return (
-          <span className="inline-flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded bg-rose-50 text-[#dc3545] border border-rose-200">
-            <AlertTriangle className="w-3 h-3" /> Ujian (UTS/UAS)
-          </span>
-        );
-      case "discussion":
-        return (
-          <span className="inline-flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-            Diskusi
-          </span>
-        );
-      default:
-        return (
-          <span className="inline-flex items-center text-sm font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
-            Akademik
-          </span>
-        );
-    }
   };
 
   // Format countdown status
@@ -137,8 +101,8 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
             </span>
           </h2>
           <p className="text-sm text-slate-500 mt-0.5">
-            Daftar tugas, kuis, dan ujian yang diparsing dari export kalender
-            Moodle Anda.
+            Daftar agenda kegiatan dan tenggat waktu yang disinkronkan dari
+            kalender OASE Moodle Anda.
           </p>
         </div>
         <button
@@ -160,7 +124,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari mata kuliah, nama tugas, atau kuis..."
+            placeholder="Cari mata kuliah atau nama agenda..."
             className="w-full pl-9 pr-3 py-2 text-sm rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-[#2c49b6] focus:border-[#2c49b6]"
           />
         </div>
@@ -170,17 +134,16 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
           {(
             [
               { key: "all", label: "Semua" },
-              { key: "assignment", label: "Tugas" },
-              { key: "quiz", label: "Kuis" },
-              { key: "exam", label: "Ujian" },
+              { key: "deadline", label: "Tenggat Waktu" },
+              { key: "agenda", label: "Agenda" },
             ] as const
           ).map((item) => (
             <button
               key={item.key}
               type="button"
-              onClick={() => setSelectedType(item.key)}
-              className={`px-3 py-1.5 rounded-md font-medium whitespace-nowrap transition-colors ${
-                selectedType === item.key
+              onClick={() => setFilterMode(item.key)}
+              className={`px-3 py-1.5 rounded-md font-medium whitespace-nowrap transition-colors cursor-pointer ${
+                filterMode === item.key
                   ? "bg-[#2c49b6] text-white shadow-xs"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
@@ -235,7 +198,15 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                 <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div className="space-y-1.5 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      {getTypeBadge(event.eventType)}
+                      {event.isDeadline ? (
+                        <span className="inline-flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#2c49b6] border border-blue-200">
+                          <Clock className="w-3.5 h-3.5" /> Deadline
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-sm font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                          <Calendar className="w-3.5 h-3.5" /> Agenda
+                        </span>
+                      )}
                       <span className="text-sm font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
                         {event.courseName}
                       </span>

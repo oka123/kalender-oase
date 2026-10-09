@@ -26,7 +26,7 @@ export function parseEventSummary(rawSummary: string): {
   const summary = (rawSummary || 'Untitled Event').trim();
   let cleanTitle = summary;
   let isDeadline = false;
-  let eventType: OaseEventType = 'general';
+  const eventType: OaseEventType = 'general';
 
   // Deteksi penanda due date Moodle
   const dueSuffixMatch = summary.match(/^(.*?)\s+is due$/i);
@@ -37,26 +37,7 @@ export function parseEventSummary(rawSummary: string): {
     isDeadline = true;
   }
 
-  const lowerTitle = summary.toLowerCase();
-
-  // Klasifikasi kategori event
-  if (lowerTitle.includes('uts') || lowerTitle.includes('uas') || lowerTitle.includes('ujian')) {
-    eventType = 'exam';
-  } else if (lowerTitle.includes('kuis') || lowerTitle.includes('quiz')) {
-    eventType = 'quiz';
-  } else if (
-    isDeadline ||
-    lowerTitle.includes('tugas') ||
-    lowerTitle.includes('laporan') ||
-    lowerTitle.includes('review') ||
-    lowerTitle.includes('pengumpulan') ||
-    lowerTitle.includes('case solving')
-  ) {
-    eventType = 'assignment';
-  } else if (lowerTitle.includes('diskusi') || lowerTitle.includes('forum')) {
-    eventType = 'discussion';
-  }
-
+  // Kategori tidak lagi diklasifikasikan secara heuristik karena sering tidak valid
   return { cleanTitle, eventType, isDeadline };
 }
 
