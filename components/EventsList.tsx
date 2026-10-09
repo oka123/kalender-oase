@@ -8,7 +8,7 @@ import {
   Clock,
   ExternalLink,
   ChevronDown,
-  ChevronUp,
+  RefreshCw,
 } from "lucide-react";
 import type { OaseEvent } from "@/types/calendar";
 
@@ -41,7 +41,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
     setExpandedId((prev) => (prev === uid ? null : uid));
   };
 
-  // Format countdown status
+  // Badge countdown minimalis
   const getDeadlineBadge = (date: Date) => {
     const now = new Date().getTime();
     const target = new Date(date).getTime();
@@ -49,116 +49,106 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
 
     if (diffHours < 0) {
       return (
-        <span className="text-sm font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-          Selesai / Terlewat
+        <span className="text-xs font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-500">
+          Selesai
         </span>
       );
     }
     if (diffHours <= 24) {
       return (
-        <span className="text-sm font-semibold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 animate-pulse">
-          Hari Ini! ({Math.ceil(diffHours)} jam lagi)
+        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-700">
+          Hari ini ({Math.ceil(diffHours)} jam)
         </span>
       );
     }
     if (diffHours <= 48) {
       return (
-        <span className="text-sm font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
           Besok
         </span>
       );
     }
     const days = Math.ceil(diffHours / 24);
     return (
-      <span className="text-sm font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
-        {days} hari lagi
+      <span className="text-xs font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+        {days} hari
       </span>
     );
   };
 
   return (
-    <div id="events-list" className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-5 scroll-mt-20">
-      {/* Header Preview & Counter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-        <div>
-          <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-[#2c49b6]" />
-            <span>Daftar Kegiatan Kalender OASE</span>
-            <span className="text-sm font-semibold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
-              {events.length} Terdeteksi
-            </span>
+    <div id="events-list" className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-4 scroll-mt-20">
+      {/* Header Minimalis */}
+      <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-[#2c49b6]" />
+          <h2 className="text-base font-bold text-slate-900">
+            Agenda Kegiatan
           </h2>
-          <p className="text-sm text-slate-600 mt-0.5">
-            Daftar jadwal kegiatan perkuliahan yang diekspor dari kalender OASE Moodle Anda.
-          </p>
+          <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+            {events.length}
+          </span>
         </div>
+
         <button
           type="button"
           onClick={onRefresh}
           disabled={isLoading}
-          className="inline-flex items-center gap-1.5 text-sm text-[#005eb8] hover:text-[#001d62] font-semibold self-start sm:self-auto py-2 px-3 rounded-md hover:bg-blue-50 transition-colors cursor-pointer border border-transparent hover:border-blue-200"
+          className="inline-flex items-center gap-1.5 text-xs text-[#005eb8] hover:text-[#001d62] font-semibold py-1.5 px-2.5 rounded-md hover:bg-blue-50 transition-colors cursor-pointer"
+          title="Muat ulang agenda"
         >
-          <Clock className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-          <span>Muat Ulang Kalender</span>
+          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          <span>Refresh</span>
         </button>
       </div>
 
-      {/* Search Bar */}
+      {/* Search Bar Minimalis */}
       <div className="relative">
-        <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+        <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Cari mata kuliah atau nama kegiatan..."
-          className="w-full pl-9 pr-10 py-2.5 text-sm rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#2c49b6] focus:border-[#2c49b6] bg-white shadow-2xs"
+          placeholder="Cari mata kuliah atau kegiatan..."
+          className="w-full pl-9 pr-9 py-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-[#2c49b6] focus:border-[#2c49b6] bg-slate-50/50 hover:bg-white focus:bg-white transition-all"
         />
         {searchQuery && (
           <button
             type="button"
             onClick={() => setSearchQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500 hover:text-slate-800 p-1 cursor-pointer"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-400 hover:text-slate-700 p-1"
           >
-            Hapus
+            &times;
           </button>
         )}
       </div>
 
-      {/* List Items */}
+      {/* List Items 2 Kolom Desktop */}
       {isLoading ? (
-        <div className="space-y-3 py-2">
-          {[1, 2, 3].map((skeletonIndex) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 py-1">
+          {[1, 2, 3, 4].map((idx) => (
             <div
-              key={skeletonIndex}
-              className="border border-slate-200 rounded-lg p-4 bg-white animate-pulse space-y-3"
+              key={idx}
+              className="border border-slate-100 rounded-lg p-4 bg-slate-50/40 animate-pulse space-y-2.5"
             >
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="h-5 w-20 bg-slate-200 rounded" />
-                <div className="h-5 w-40 bg-slate-200 rounded" />
-                <div className="h-5 w-24 bg-slate-200 rounded-full" />
+              <div className="flex items-center justify-between">
+                <div className="h-4 w-28 bg-slate-200 rounded" />
+                <div className="h-4 w-16 bg-slate-200 rounded" />
               </div>
-              <div className="h-6 w-3/4 bg-slate-200 rounded" />
-              <div className="flex items-center justify-between pt-1">
-                <div className="h-4 w-48 bg-slate-200 rounded" />
-                <div className="h-8 w-24 bg-slate-200 rounded" />
-              </div>
+              <div className="h-5 w-3/4 bg-slate-200 rounded" />
+              <div className="h-3.5 w-32 bg-slate-200 rounded" />
             </div>
           ))}
         </div>
       ) : filteredEvents.length === 0 ? (
-        <div className="py-12 text-center text-slate-500 space-y-2 border border-dashed border-slate-300 rounded-lg bg-slate-50/50">
-          <BookOpen className="w-8 h-8 mx-auto text-slate-400" />
-          <p className="text-sm font-semibold text-slate-700">
-            Tidak ada agenda yang ditemukan
-          </p>
-          <p className="text-sm text-slate-500 max-w-md mx-auto">
-            {searchQuery
-              ? "Coba gunakan kata kunci pencarian yang lain."
-              : "Pastikan URL kalender OASE sudah benar dan memiliki agenda aktif."}
+        <div className="py-10 text-center text-slate-500 space-y-1.5 border border-dashed border-slate-200 rounded-lg bg-slate-50/40">
+          <BookOpen className="w-6 h-6 mx-auto text-slate-400" />
+          <p className="text-sm font-medium text-slate-700">
+            {searchQuery ? "Agenda tidak ditemukan" : "Tidak ada agenda"}
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-start">
           {filteredEvents.map((event) => {
             const isExpanded = expandedId === event.uid;
             const startDate = new Date(event.start);
@@ -166,7 +156,6 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
               weekday: "short",
               day: "numeric",
               month: "short",
-              year: "numeric",
             });
             const timeStr = startDate.toLocaleTimeString("id-ID", {
               hour: "2-digit",
@@ -176,100 +165,96 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
             return (
               <div
                 key={event.uid}
-                className="border border-slate-200 hover:border-blue-200 rounded-lg bg-white transition-all shadow-xs overflow-hidden"
+                className={`border rounded-lg bg-white transition-all overflow-hidden ${
+                  isExpanded
+                    ? "border-[#2c49b6]/40 shadow-xs ring-1 ring-[#2c49b6]/15"
+                    : "border-slate-200/90 hover:border-slate-300 hover:shadow-xs"
+                }`}
               >
-                <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-semibold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">
-                        {event.courseName}
-                      </span>
+                {/* Header Kartu Minimalis Interaktif */}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isExpanded}
+                  onClick={() => toggleExpand(event.uid)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleExpand(event.uid);
+                    }
+                  }}
+                  className="p-3.5 sm:p-4 cursor-pointer select-none group focus:outline-none space-y-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-slate-700 truncate max-w-[200px]" title={event.courseName}>
+                      {event.courseName}
+                    </span>
+                    <div className="shrink-0 flex items-center gap-1.5">
                       {getDeadlineBadge(startDate)}
-                    </div>
-
-                    <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
-                      {event.cleanTitle}
-                    </h3>
-
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
-                      <span className="flex items-center gap-1.5 text-slate-600 font-medium">
-                        <Clock className="w-4 h-4 text-[#2c49b6]" />
-                        <span>
-                          {dateStr} • {timeStr} WITA
-                        </span>
-                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform duration-200 ${
+                          isExpanded ? "rotate-180 text-[#2c49b6]" : ""
+                        }`}
+                      />
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-2.5 self-start sm:self-center shrink-0 pt-1 sm:pt-0">
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-[#001d62] leading-snug transition-colors">
+                    {event.cleanTitle}
+                  </h3>
+
+                  <div className="flex items-center justify-between gap-2 text-xs text-slate-500 pt-0.5">
+                    <span className="flex items-center gap-1 text-slate-600 font-medium">
+                      <Clock className="w-3.5 h-3.5 text-[#2c49b6] shrink-0" />
+                      <span>
+                        {dateStr} &bull; {timeStr} WITA
+                      </span>
+                    </span>
+
                     {event.url && (
                       <a
                         href={event.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm text-[#005eb8] hover:text-[#001d62] font-semibold bg-blue-50 hover:bg-blue-100 px-3.5 py-2 rounded-md transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-[#005eb8] hover:text-[#001d62] font-semibold hover:underline"
+                        title="Buka di OASE"
                       >
-                        <span>Buka OASE</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>OASE</span>
+                        <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
-                    <button
-                      type="button"
-                      onClick={() => toggleExpand(event.uid)}
-                      className="p-2 text-slate-500 hover:text-slate-800 rounded-md hover:bg-slate-100 transition-colors cursor-pointer"
-                      title={isExpanded ? "Sembunyikan detail" : "Lihat detail"}
-                    >
-                      {isExpanded ? (
-                        <ChevronUp className="w-5 h-5" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5" />
-                      )}
-                    </button>
                   </div>
                 </div>
 
-                {/* Expanded Details */}
+                {/* Expanded Details Minimalis */}
                 {isExpanded && (
-                  <div className="border-t border-slate-100 bg-slate-50/70 p-4 text-sm space-y-3">
+                  <div className="border-t border-slate-100 bg-slate-50/60 p-3.5 text-xs text-slate-600 space-y-2 animate-in fade-in duration-100">
                     {event.cleanDescription ? (
-                      <div>
-                        <div className="font-semibold text-slate-700 mb-1">
-                          Instruksi / Catatan:
-                        </div>
-                        <p className="text-slate-600 whitespace-pre-line leading-relaxed">
-                          {event.cleanDescription}
-                        </p>
-                      </div>
+                      <p className="whitespace-pre-line leading-relaxed">
+                        {event.cleanDescription}
+                      </p>
                     ) : (
                       <p className="text-slate-400 italic">
-                        Tidak ada catatan tambahan untuk tugas ini.
+                        Tidak ada catatan tambahan.
                       </p>
                     )}
 
                     {event.links && event.links.length > 0 && (
-                      <div>
-                        <div className="font-semibold text-slate-700 mb-1">
-                          Tautan Lampiran:
-                        </div>
-                        <ul className="space-y-1">
-                          {event.links.map((link, idx) => (
-                            <li key={idx}>
-                              <a
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline flex items-center gap-1"
-                              >
-                                <span>{link.label}:</span>
-                                <span className="truncate max-w-md">
-                                  {link.url}
-                                </span>
-                                <ExternalLink className="w-3 h-3 shrink-0" />
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
+                      <div className="pt-1.5 border-t border-slate-200/60 space-y-1">
+                        {event.links.map((link, idx) => (
+                          <a
+                            key={idx}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline flex items-center gap-1 truncate"
+                          >
+                            <span>{link.label || "Lampiran"}:</span>
+                            <span className="truncate">{link.url}</span>
+                            <ExternalLink className="w-3 h-3 shrink-0" />
+                          </a>
+                        ))}
                       </div>
                     )}
                   </div>

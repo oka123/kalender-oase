@@ -7,7 +7,6 @@ import {
   Bell,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
   Layers,
   ArrowRight,
   ExternalLink,
@@ -82,35 +81,29 @@ export function SyncControls({
 
   return (
     <div id="sync-controls" className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-6 scroll-mt-20">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
-        <div>
-          <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
-            <Layers className="w-5 h-5 text-[#2c49b6]" />
-            <span>Pusat Sinkronisasi Google Calendar</span>
-          </h2>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Atur kalender target dan notifikasi pengingat sebelum mengeksekusi
-            sinkronisasi.
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+          <Layers className="w-5 h-5 text-[#2c49b6]" />
+          <span>Pengaturan Sinkronisasi</span>
+        </h2>
         {isAuthenticated && (
-          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 self-start sm:self-auto">
-            <CheckCircle2 className="w-3.5 h-3.5" /> Google Terhubung
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 self-start sm:self-auto">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Terhubung
           </span>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Kolom 1: Pilihan Kalender Tujuan */}
-        <div className="space-y-3">
-          <label className="text-sm font-semibold text-slate-700 uppercase tracking-wider block">
+        <div className="space-y-2">
+          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block">
             Kalender Tujuan
           </label>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label
-              className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-all ${
+              className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
                 calendarMode === "dedicated"
-                  ? "border-[#2c49b6] bg-blue-50/50 shadow-xs"
+                  ? "border-[#2c49b6] bg-blue-50/50 shadow-2xs"
                   : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
@@ -119,28 +112,20 @@ export function SyncControls({
                 name="calMode"
                 checked={calendarMode === "dedicated"}
                 onChange={() => setCalendarMode("dedicated")}
-                className="mt-0.5 text-[#2c49b6] focus:ring-[#2c49b6]"
+                className="text-[#2c49b6] focus:ring-[#2c49b6]"
               />
-              <div className="text-sm">
-                <div className="font-semibold text-slate-800 flex items-center gap-1.5">
-                  <span>
-                    Buat Kalender Khusus &quot;OASE UNUD - Akademik&quot;
-                  </span>
-                  <span className="bg-blue-600 text-sm text-white px-1.5 py-0.5 rounded font-normal">
-                    Rekomendasi
-                  </span>
-                </div>
-                <p className="text-slate-500 text-sm mt-0.5">
-                  Membuat kalender terpisah khusus OASE agar jadwal kuliah tidak
-                  bercampur dengan agenda pribadi.
-                </p>
+              <div className="text-sm font-semibold text-slate-800 flex items-center justify-between flex-1">
+                <span>Kalender Khusus &quot;OASE UNUD&quot;</span>
+                <span className="text-[11px] font-normal bg-blue-600 text-white px-1.5 py-0.5 rounded">
+                  Rekomendasi
+                </span>
               </div>
             </label>
 
             <label
-              className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-all ${
+              className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
                 calendarMode === "primary"
-                  ? "border-[#2c49b6] bg-blue-50/50 shadow-xs"
+                  ? "border-[#2c49b6] bg-blue-50/50 shadow-2xs"
                   : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
@@ -149,23 +134,18 @@ export function SyncControls({
                 name="calMode"
                 checked={calendarMode === "primary"}
                 onChange={() => setCalendarMode("primary")}
-                className="mt-0.5 text-[#2c49b6] focus:ring-[#2c49b6]"
+                className="text-[#2c49b6] focus:ring-[#2c49b6]"
               />
-              <div className="text-sm">
-                <div className="font-semibold text-slate-800">
-                  Kalender Utama (Primary)
-                </div>
-                <p className="text-slate-500 text-sm mt-0.5">
-                  Sinkronisasikan langsung ke kalender default akun Google Anda.
-                </p>
+              <div className="text-sm font-semibold text-slate-800">
+                Kalender Utama (Primary)
               </div>
             </label>
 
             {calendars.length > 0 && (
               <label
-                className={`flex items-start gap-3 p-3 rounded-md border cursor-pointer transition-all ${
+                className={`flex items-start gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
                   calendarMode === "custom"
-                    ? "border-[#2c49b6] bg-blue-50/50 shadow-xs"
+                    ? "border-[#2c49b6] bg-blue-50/50 shadow-2xs"
                     : "border-slate-200 hover:border-slate-300 bg-white"
                 }`}
               >
@@ -178,13 +158,13 @@ export function SyncControls({
                 />
                 <div className="text-sm flex-1">
                   <div className="font-semibold text-slate-800">
-                    Pilih dari Kalender Lain
+                    Pilih Kalender Lain
                   </div>
                   {calendarMode === "custom" && (
                     <select
                       value={selectedCalendarId}
                       onChange={(e) => setSelectedCalendarId(e.target.value)}
-                      className="mt-2 block w-full text-sm rounded border border-slate-300 bg-white py-1.5 px-2 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#2c49b6]"
+                      className="mt-1.5 block w-full text-xs rounded border border-slate-300 bg-white py-1 px-2 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#2c49b6]"
                     >
                       {calendars.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -199,13 +179,13 @@ export function SyncControls({
           </div>
         </div>
 
-        {/* Kolom 2: Pengaturan Notifikasi Alarm & Info */}
-        <div className="space-y-3">
-          <label className="text-sm font-semibold text-slate-700 uppercase tracking-wider block">
-            Pengingat Notifikasi (Google Alert)
+        {/* Kolom 2: Pengaturan Notifikasi Alarm */}
+        <div className="space-y-2">
+          <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block">
+            Pengingat Alarm
           </label>
-          <div className="p-3.5 rounded-md border border-slate-200 bg-slate-50/70 space-y-2.5">
-            <label className="flex items-center gap-2.5 text-sm text-slate-700 cursor-pointer">
+          <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/60 space-y-2">
+            <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={reminder1Day}
@@ -214,11 +194,11 @@ export function SyncControls({
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-amber-500" />
-                <span>1 Hari (24 Jam) sebelum batas pengumpulan</span>
+                <span>24 Jam Sebelumnya</span>
               </span>
             </label>
 
-            <label className="flex items-center gap-2.5 text-sm text-slate-700 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={reminder2Hours}
@@ -227,11 +207,11 @@ export function SyncControls({
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-amber-500" />
-                <span>2 Jam sebelum batas pengumpulan</span>
+                <span>2 Jam Sebelumnya</span>
               </span>
             </label>
 
-            <label className="flex items-center gap-2.5 text-sm text-slate-700 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={reminder30Mins}
@@ -240,18 +220,9 @@ export function SyncControls({
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-slate-400" />
-                <span>30 Menit sebelum batas pengumpulan (Final reminder)</span>
+                <span>30 Menit Sebelumnya</span>
               </span>
             </label>
-          </div>
-
-          <div className="bg-blue-50/60 border border-blue-100 rounded-md p-3 text-sm text-blue-800 flex items-start gap-2">
-            <Sparkles className="w-4 h-4 text-[#2c49b6] shrink-0 mt-0.5" />
-            <span>
-              <strong>Smart Idempotent:</strong> Sistem mendeteksi otomatis jika
-              tugas sudah pernah disinkronkan, sehingga tidak akan menduplikasi
-              jadwal yang sama.
-            </span>
           </div>
         </div>
       </div>

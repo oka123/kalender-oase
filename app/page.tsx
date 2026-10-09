@@ -349,12 +349,8 @@ function DashboardContent() {
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 Kalender OASE
               </h1>
-              <p className="text-sm text-blue-100 leading-relaxed">
-                Sinkronisasikan seluruh tenggat pengumpulan tugas, kuis, UTS,
-                dan UAS dari portal Moodle OASE ke Google Calendar Anda secara
-                otomatis disertai notifikasi alarm pengingat. (Default feed:{" "}
-                <em>Informatika Kelas A &apos;24</em> &bull; Dapat disesuaikan
-                dengan URL prodi Anda).
+              <p className="text-sm text-blue-100/90 leading-relaxed">
+                Sinkronisasi jadwal tugas dan kegiatan dari OASE Moodle ke Google Calendar secara otomatis.
               </p>
             </div>
 
@@ -427,12 +423,9 @@ function DashboardContent() {
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-sm text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-1.5 text-slate-600">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>
-              Stateless OAuth &bull; Tidak menyimpan password atau data pribadi
-              ke database eksternal
-            </span>
+          <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span>Stateless &bull; Data Terlindungi</span>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">

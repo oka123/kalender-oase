@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { HelpCircle, ChevronDown, Sparkles } from "lucide-react";
+import { HelpCircle, ChevronDown } from "lucide-react";
 
 interface FaqItem {
   question: string;
@@ -70,19 +70,10 @@ export function FaqSection() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-5">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold border border-blue-200">
-            <Sparkles className="w-4 h-4 text-blue-600" />
-            <span>Tanya Jawab &amp; Panduan</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            Pertanyaan yang Sering Diajukan (FAQ)
-          </h2>
-          <p className="text-sm text-slate-500">
-            Jawaban lengkap seputar penggunaan dan keamanan sinkronisasi kalender OASE UNUD.
-          </p>
-        </div>
+      <div className="border-b border-slate-100 pb-4">
+        <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+          Pertanyaan Umum (FAQ)
+        </h2>
       </div>
 
       <div className="divide-y divide-slate-100">

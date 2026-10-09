@@ -8,7 +8,6 @@ import {
   ChevronDown,
   ChevronUp,
   ChevronRight,
-  ShieldCheck,
   Lock,
   Eye,
   EyeOff,
@@ -42,30 +41,24 @@ export function IcalConfigCard({
   };
 
   return (
-    <div id="ical-source-section" className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-4 scroll-mt-20">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
-        <div>
-          <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
-            <Link2 className="w-5 h-5 text-[#2c49b6]" />
-            <span>Sumber Kalender OASE</span>
-          </h2>
-          <p className="text-sm text-slate-500 mt-0.5">
-            URL ekspor iCal Moodle UNUD yang digunakan untuk sinkronisasi jadwal
-            secara langsung.
-          </p>
-        </div>
+    <div id="ical-source-section" className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-3.5 scroll-mt-20">
+      <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+          <Link2 className="w-4 h-4 text-[#2c49b6]" />
+          <span>Sumber Kalender OASE</span>
+        </h2>
 
         <button
           type="button"
           onClick={() => setShowGuide(!showGuide)}
-          className="inline-flex items-center gap-1.5 text-sm text-[#005eb8] hover:text-[#001d62] font-semibold self-start sm:self-auto cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs text-[#005eb8] hover:text-[#001d62] font-semibold cursor-pointer"
         >
-          <HelpCircle className="w-4 h-4" />
-          <span>Cara Ambil URL di OASE</span>
+          <HelpCircle className="w-3.5 h-3.5" />
+          <span>Panduan Ambil URL</span>
           {showGuide ? (
-            <ChevronUp className="w-3.5 h-3.5" />
+            <ChevronUp className="w-3 h-3" />
           ) : (
-            <ChevronDown className="w-3.5 h-3.5" />
+            <ChevronDown className="w-3 h-3" />
           )}
         </button>
       </div>
@@ -157,44 +150,18 @@ export function IcalConfigCard({
         </div>
       )}
 
-      {/* Status URL Aman (Privat) */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-slate-50 p-4 rounded-lg border border-slate-200">
-        <div className="space-y-1.5 min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
-              Status Kalender:
-            </span>
+      {/* Status URL Minimalis */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/70 p-3.5 rounded-lg border border-slate-200">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Lock className="w-4 h-4 text-slate-400 shrink-0" />
+          <div className="text-xs sm:text-sm font-medium text-slate-700 truncate">
             {isCustomUrlActive ? (
-              <span className="text-sm font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 text-[#2c49b6] border border-blue-200 flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#2c49b6]" />
-                URL Kustom Aktif
-              </span>
+              <span className="text-[#2c49b6] font-semibold">URL Kalender Kustom Anda Aktif</span>
             ) : hasConfiguredUrl ? (
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  Default Server Terhubung
-                </span>
-                <span className="text-sm font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-[#001d62] border border-blue-300">
-                  Informatika Kelas A Angkatan 2024
-                </span>
-              </div>
+              <span>Feed Default: <strong className="text-slate-900 font-semibold">Informatika Kelas A &apos;24</strong></span>
             ) : (
-              <span className="text-sm font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
-                Belum Terkonfigurasi
-              </span>
+              <span className="text-amber-700">Belum ada URL kalender</span>
             )}
-          </div>
-
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Lock className="w-4 h-4 text-slate-400 shrink-0" />
-            <span className="text-slate-600">
-              {isCustomUrlActive
-                ? "•••••••••••••••••••••••••••••••• (URL Kustom Disimpan di Sesi Anda)"
-                : hasConfiguredUrl
-                  ? "Kalender default memuat jadwal mata kuliah Informatika Kelas A Angkatan 2024 (URL privat terlindungi di server)."
-                  : "Belum ada URL OASE yang dimasukkan"}
-            </span>
           </div>
         </div>
 
@@ -205,7 +172,7 @@ export function IcalConfigCard({
               setIsEditing(!isEditing);
               setInputUrl("");
             }}
-            className="text-sm font-semibold px-4 py-2 rounded-md border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition-colors cursor-pointer"
+            className="text-xs font-semibold px-3 py-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition-colors cursor-pointer"
           >
             {isEditing
               ? "Batal"

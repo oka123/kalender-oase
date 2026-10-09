@@ -38,12 +38,9 @@ export function Header({
               <span className="font-bold tracking-tight text-lg text-white">
                 Kalender OASE
               </span>
-              {/* <span className="hidden sm:inline-block text-sm uppercase font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-200 border border-blue-400/30">
-                UNUD Academic
-              </span> */}
             </div>
-            <p className="text-sm text-slate-300 hidden sm:block">
-              Universitas Udayana Moodle to Google Calendar Sync
+            <p className="text-xs text-blue-200/80 hidden sm:block">
+              Universitas Udayana
             </p>
           </div>
         </div>
