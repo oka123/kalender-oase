@@ -4,15 +4,16 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
   Suspense,
-  useMemo,
 } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/Header";
 import { SyncControls } from "@/components/SyncControls";
 import { EventsList } from "@/components/EventsList";
-import { IcalConfigCard } from "@/components/IcalConfigCard";
+import { OaseLoginCard } from "@/components/OaseLoginCard";
+import { SecurityCaptcha } from "@/components/SecurityCaptcha";
 import { GithubActionsModal } from "@/components/GithubActionsModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Logo } from "@/components/Logo";
@@ -21,11 +22,13 @@ import type {
   OaseEvent,
   GoogleCalendarItem,
   SyncResult,
+  MoodleActionEvent,
 } from "@/types/calendar";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { useToast } from "@/components/Toast";
 
 function DashboardContent() {
   const searchParams = useSearchParams();
+  const { toast } = useToast();
 
   // State
   const [user, setUser] = useState<{
@@ -34,45 +37,40 @@ function DashboardContent() {
     picture?: string | null;
   } | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   const [isGithubModalOpen, setIsGithubModalOpen] = useState<boolean>(false);
   const [calendars, setCalendars] = useState<GoogleCalendarItem[]>([]);
   const [events, setEvents] = useState<OaseEvent[]>([]);
-  const [isLoadingEvents, setIsLoadingEvents] = useState<boolean>(true);
+  const [rawTasks, setRawTasks] = useState<MoodleActionEvent[]>([]);
+  const [credentials, setCredentials] = useState<{
+    username: string;
+    password: string;
+  } | null>(null);
+  const [isLoadingEvents, setIsLoadingEvents] = useState<boolean>(false);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [syncResult, setSyncResult] = useState<SyncResult | null>(null);
-  const [hasConfiguredUrl, setHasConfiguredUrl] = useState<boolean>(false);
-  const [customIcalUrl, setCustomIcalUrl] = useState<string>("");
-  const [isCustomUrlActive, setIsCustomUrlActive] = useState<boolean>(false);
-  const [notification, setNotification] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-  const [isQueryNotifDismissed, setIsQueryNotifDismissed] =
-    useState<boolean>(false);
 
   const authStatus = searchParams.get("auth");
   const authError = searchParams.get("auth_error");
+  const handledAuthRef = useRef(false);
 
-  const queryNotification = useMemo(() => {
+  // Tangani notifikasi dari URL OAuth callback
+  useEffect(() => {
+    if (!authStatus && !authError) return;
+    if (handledAuthRef.current) return;
+    handledAuthRef.current = true;
+
     if (authStatus === "success") {
-      return {
-        type: "success" as const,
-        message:
-          "Akun Google berhasil dihubungkan! Anda dapat mulai menyinkronkan jadwal sekarang.",
-      };
+      toast.success(
+        "Akun Google berhasil terhubung! Anda dapat menyinkronkan jadwal sekarang.",
+      );
+    } else if (authError) {
+      toast.error(decodeURIComponent(authError));
     }
-    if (authError) {
-      return {
-        type: "error" as const,
-        message: decodeURIComponent(authError),
-      };
-    }
-    return null;
-  }, [authStatus, authError]);
 
-  const activeNotification =
-    notification || (isQueryNotifDismissed ? null : queryNotification);
+    window.history.replaceState({}, "", window.location.pathname);
+  }, [authStatus, authError, toast]);
 
   // Muat daftar kalender Google
   const loadCalendars = useCallback(async () => {
@@ -87,36 +85,41 @@ function DashboardContent() {
     }
   }, []);
 
-  // Muat jadwal dari OASE langsung via URL
-  const loadEvents = useCallback(async (customUrl?: string) => {
-    setIsLoadingEvents(true);
-    try {
-      const params = new URLSearchParams();
-      if (customUrl) params.set("url", customUrl);
-
-      const res = await fetch(`/api/preview?${params.toString()}`);
-      const data = await res.json();
-
-      if (res.ok) {
-        setEvents(data.events || []);
-        setHasConfiguredUrl(Boolean(data.hasConfiguredUrl));
-      } else {
-        setNotification({
-          type: "error",
-          message: data.error || "Gagal memuat feed iCal OASE.",
+  // Muat jadwal tugas belum dikerjakan dari OASE via API Moodle
+  const handleFetchTasks = useCallback(
+    async (creds: { username: string; password: string }) => {
+      setIsLoadingEvents(true);
+      try {
+        const res = await fetch("/api/preview", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(creds),
         });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          setEvents(data.events || []);
+          setRawTasks(data.rawTasks || []);
+          setCredentials(creds);
+          toast.success(
+            `Berhasil memuat ${data.total} tugas aktif dari OASE!`,
+          );
+        } else {
+          throw new Error(
+            data.error || "Gagal mengambil daftar tugas dari OASE.",
+          );
+        }
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Koneksi ke server gagal.";
+        toast.error(msg);
+        throw err;
+      } finally {
+        setIsLoadingEvents(false);
       }
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : "Koneksi ke server gagal.";
-      setNotification({
-        type: "error",
-        message: msg,
-      });
-    } finally {
-      setIsLoadingEvents(false);
-    }
-  }, []);
+    },
+    [toast],
+  );
 
   // Handler OAuth login
   const handleLogin = async () => {
@@ -126,10 +129,10 @@ function DashboardContent() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert(data.error || "Gagal mengambil URL otorisasi Google");
+        toast.error(data.error || "Gagal mengambil URL otorisasi Google");
       }
     } catch {
-      alert("Terjadi kesalahan saat memulai autentikasi Google.");
+      toast.error("Terjadi kesalahan saat memulai autentikasi Google.");
     }
   };
 
@@ -141,12 +144,9 @@ function DashboardContent() {
       setUser(null);
       setIsAuthenticated(false);
       setCalendars([]);
-      setNotification({
-        type: "success",
-        message: "Berhasil keluar dari akun Google.",
-      });
+      toast.success("Berhasil keluar dari akun Google.");
     } catch {
-      alert("Gagal melakukan logout");
+      toast.error("Gagal melakukan logout akun Google.");
     } finally {
       setIsLoggingOut(false);
     }
@@ -159,13 +159,21 @@ function DashboardContent() {
     reminderMinutes: number[];
     turnstileToken?: string;
   }) => {
+    if (events.length === 0) {
+      toast.error(
+        "Belum ada tugas yang dimuat. Silakan masukkan akun OASE Anda dan ambil daftar tugas terlebih dahulu.",
+      );
+      return;
+    }
+
     setIsSyncing(true);
     setSyncResult(null);
 
     try {
       const body = {
         ...options,
-        customIcalUrl: isCustomUrlActive ? customIcalUrl : undefined,
+        pendingTasks: rawTasks,
+        oaseCredentials: credentials || undefined,
         turnstileToken: options.turnstileToken,
       };
 
@@ -178,28 +186,19 @@ function DashboardContent() {
       const data = await res.json();
       if (res.ok && data.success) {
         setSyncResult(data.result);
-        setNotification({
-          type: "success",
-          message: data.message || "Sinkronisasi berhasil!",
-        });
+        toast.success(data.message || "Sinkronisasi kalender berhasil!");
         if (options.createDedicatedCalendar) {
           loadCalendars();
         }
       } else {
-        setNotification({
-          type: "error",
-          message: data.error || "Gagal menjalankan sinkronisasi.",
-        });
+        toast.error(data.error || "Gagal menjalankan sinkronisasi kalender.");
       }
     } catch (err: unknown) {
       const msg =
         err instanceof Error
           ? err.message
           : "Terjadi kegagalan komunikasi saat sinkronisasi.";
-      setNotification({
-        type: "error",
-        message: msg,
-      });
+      toast.error(msg);
     } finally {
       setIsSyncing(false);
     }
@@ -212,7 +211,7 @@ function DashboardContent() {
     }
   }, [authStatus, authError]);
 
-  // Inisialisasi data awal (auth check & preview jadwal)
+  // Inisialisasi data awal (auth check & preview jadwal jika kredensial server tersedia)
   useEffect(() => {
     let ignore = false;
 
@@ -243,34 +242,16 @@ function DashboardContent() {
         }
       }
 
-      // 2. Muat jadwal awal OASE
+      // 2. Muat jadwal awal OASE jika kredensial lingkungan disetel di server
       try {
         const previewRes = await fetch("/api/preview");
         const previewData = await previewRes.json();
-        if (!ignore) {
-          if (previewRes.ok) {
-            setEvents(previewData.events || []);
-            setHasConfiguredUrl(Boolean(previewData.hasConfiguredUrl));
-          } else {
-            setNotification({
-              type: "error",
-              message: previewData.error || "Gagal memuat feed iCal OASE.",
-            });
-          }
+        if (!ignore && previewRes.ok && previewData.success) {
+          setEvents(previewData.events || []);
+          setRawTasks(previewData.rawTasks || []);
         }
-      } catch (err: unknown) {
-        if (!ignore) {
-          const msg =
-            err instanceof Error ? err.message : "Koneksi ke server gagal.";
-          setNotification({
-            type: "error",
-            message: msg,
-          });
-        }
-      } finally {
-        if (!ignore) {
-          setIsLoadingEvents(false);
-        }
+      } catch {
+        // Memerlukan login manual dari form OaseLoginCard
       }
     }
 
@@ -298,36 +279,6 @@ function DashboardContent() {
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
-        {/* Banner Alert Notifikasi */}
-        {activeNotification && (
-          <div
-            className={`p-4 rounded-lg flex items-start justify-between gap-3 shadow-xs border ${
-              activeNotification.type === "success"
-                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                : "bg-rose-50 text-rose-800 border-rose-200"
-            }`}
-          >
-            <div className="flex items-center gap-2 text-sm font-medium">
-              {activeNotification.type === "success" ? (
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-              ) : (
-                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-              )}
-              <span>{activeNotification.message}</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setNotification(null);
-                setIsQueryNotifDismissed(true);
-              }}
-              className="text-sm font-semibold hover:opacity-75"
-            >
-              Tutup
-            </button>
-          </div>
-        )}
-
         {/* Hero Banner Pendahuluan */}
         <div className="bg-linear-to-r from-[#001d62] via-[#204c96] to-[#005eb8] text-white rounded-xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -336,7 +287,7 @@ function DashboardContent() {
                 Kalender OASE
               </h1>
               <p className="text-sm text-blue-100/90 leading-relaxed">
-                Sinkronisasi jadwal tugas dan kegiatan dari OASE Moodle ke
+                Sinkronisasi jadwal tugas dan kegiatan aktif dari OASE Moodle ke
                 Google Calendar secara otomatis.
               </p>
             </div>
@@ -349,6 +300,11 @@ function DashboardContent() {
           {/* Subtle Decorative Background Element */}
           <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 bg-radial from-white to-transparent pointer-events-none" />
         </div>
+
+        {/* Verifikasi Keamanan Cloudflare di Awal Halaman */}
+        <SecurityCaptcha
+          onVerifyChange={(state) => setIsCaptchaVerified(state.isVerified)}
+        />
 
         {/* 3-Step Alur Cepat Onboarding */}
         <WorkflowStepper
@@ -363,24 +319,23 @@ function DashboardContent() {
           }}
           onScrollToEvents={() => {
             document
-              .getElementById("events-list")
+              .getElementById("oase-auth-section")
               ?.scrollIntoView({ behavior: "smooth" });
           }}
         />
 
-        {/* Konfigurasi Sumber iCal */}
-        <IcalConfigCard
-          hasConfiguredUrl={hasConfiguredUrl}
-          isCustomUrlActive={isCustomUrlActive}
-          onApplyCustomUrl={(newUrl) => {
-            setCustomIcalUrl(newUrl);
-            setIsCustomUrlActive(true);
-            loadEvents(newUrl);
-          }}
-          onResetToDefault={() => {
-            setCustomIcalUrl("");
-            setIsCustomUrlActive(false);
-            loadEvents();
+        {/* Form Login & Pengambilan Tugas OASE Moodle */}
+        <OaseLoginCard
+          isLoading={isLoadingEvents}
+          onFetchTasks={handleFetchTasks}
+          loadedTasksCount={events.length}
+          hasLoadedTasks={events.length > 0}
+          isCaptchaVerified={isCaptchaVerified}
+          onClearSession={() => {
+            setEvents([]);
+            setRawTasks([]);
+            setCredentials(null);
+            toast.info("Sesi dan daftar tugas OASE berhasil dibersihkan.");
           }}
         />
 
@@ -392,15 +347,19 @@ function DashboardContent() {
           isSyncing={isSyncing}
           syncResult={syncResult}
           onLoginRequest={handleLogin}
+          isCaptchaVerified={isCaptchaVerified}
+          hasTasks={events.length > 0}
         />
 
         {/* Daftar Agenda & Event Preview */}
         <EventsList
           events={events}
           isLoading={isLoadingEvents}
-          onRefresh={() =>
-            loadEvents(isCustomUrlActive ? customIcalUrl : undefined)
-          }
+          onRefresh={() => {
+            if (credentials) {
+              handleFetchTasks(credentials);
+            }
+          }}
         />
 
         {/* Section FAQ & Panduan SEO */}

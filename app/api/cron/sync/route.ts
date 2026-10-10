@@ -65,19 +65,54 @@ async function handleCronSync(request: Request) {
       );
     }
 
+    // 1. Cek apakah ada pendingTasks yang dikirimkan via request body JSON
+    let pendingTasks = undefined;
+    try {
+      if (request.headers.get('content-type')?.includes('application/json')) {
+        const body = await request.clone().json().catch(() => null);
+        if (body && Array.isArray(body.pendingTasks)) {
+          pendingTasks = body.pendingTasks;
+        }
+      }
+    } catch {
+      // Body opsional
+    }
+
+    // 2. Jika tidak ada di body, ambil menggunakan kredensial SSO OASE di environment Vercel
+    const oaseUsername = process.env.OASE_USERNAME?.trim();
+    const oasePassword = process.env.OASE_PASSWORD;
+
+    if (!pendingTasks && (!oaseUsername || !oasePassword)) {
+      return NextResponse.json(
+        {
+          error:
+            'Kredensial SSO OASE belum dikonfigurasi: OASE_USERNAME dan OASE_PASSWORD wajib disetel di Environment Variables Vercel untuk menjalankan sinkronisasi otomatis.',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!pendingTasks && oaseUsername && oasePassword) {
+      const { fetchPendingOaseTasks } = await import('@/lib/oase-auth');
+      pendingTasks = await fetchPendingOaseTasks(oaseUsername, oasePassword);
+    }
+
     // Eksekusi sinkronisasi ke kalender khusus OASE
     const result = await syncOaseToGoogleCalendar(
       {
         calendarId: process.env.GOOGLE_CALENDAR_ID || 'dedicated',
         createDedicatedCalendar: true,
-        reminderMinutes: [1440, 120], // 1 hari & 2 jam sebelum batas waktu
+        reminderMinutes: [1440, 120, 30], // 1 hari, 2 jam, dan 30 menit sebelum batas waktu
+        pendingTasks,
       },
       oauth2Client
     );
 
+    const completedMsg = result.completed ? `, ${result.completed} selesai` : '';
     return NextResponse.json({
       success: true,
-      message: `Sinkronisasi webhook otomatis berhasil! (${result.created} dibuat, ${result.updated} diperbarui, ${result.skipped} dilewati)`,
+      source: 'moodle_action_events',
+      message: `Sinkronisasi otomatis berhasil! (${result.created} dibuat, ${result.updated} diperbarui${completedMsg}, ${result.skipped} dilewati)`,
       result,
     });
   } catch (error: unknown) {

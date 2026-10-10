@@ -20,14 +20,14 @@ export function WorkflowStepper({
   onScrollToEvents,
 }: WorkflowStepperProps) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-4 sm:p-5">
+    <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-3.5 sm:p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* Step 1 */}
         <div
-          className={`p-3.5 rounded-lg border transition-all flex flex-col justify-between ${
+          className={`p-3 rounded-lg border transition-all flex flex-col justify-between ${
             isAuthenticated
-              ? "bg-emerald-50/30 border-emerald-200/80"
-              : "bg-slate-50/60 border-slate-200"
+              ? "bg-emerald-50/40 border-emerald-200/80"
+              : "bg-slate-50/60 border-slate-200/80"
           }`}
         >
           <div className="space-y-1">
@@ -46,30 +46,30 @@ export function WorkflowStepper({
                 )}
               </span>
               <h3 className="text-sm font-bold text-slate-900">
-                Connect Google
+                Hubungkan Google
               </h3>
             </div>
-            <p className="text-sm text-slate-500 pt-0.5">
+            <p className="text-sm text-slate-500">
               {isAuthenticated
                 ? "Akun Google Calendar terhubung."
-                : "Hubungkan akun untuk sinkronisasi ke Google Calendar."}
+                : "Masuk untuk memilih kalender tujuan."}
             </p>
           </div>
 
           {!isAuthenticated ? (
-            <div className="pt-2.5">
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={onLoginClick}
                 className="w-full inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-white bg-[#005eb8] hover:bg-[#004ba8] px-3 py-1.5 rounded-md transition-colors cursor-pointer"
               >
                 <KeyRound className="w-3 h-3" />
-                <span>Sign in with Google</span>
+                <span>Masuk Akun Google</span>
               </button>
             </div>
           ) : (
-            <div className="pt-2.5 text-sm text-emerald-700 font-medium">
-              ✓ Connected
+            <div className="pt-2 text-sm text-emerald-700 font-semibold flex items-center gap-1">
+              <span>✓ Terhubung</span>
             </div>
           )}
         </div>
@@ -84,26 +84,36 @@ export function WorkflowStepper({
               onScrollToEvents();
             }
           }}
-          className="p-3.5 rounded-lg border border-slate-200 bg-slate-50/60 hover:bg-slate-100/60 transition-all flex flex-col justify-between cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#2c49b6]"
+          className="p-3 rounded-lg border border-slate-200/80 bg-slate-50/60 hover:bg-slate-100/60 transition-all flex flex-col justify-between cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#005eb8]"
         >
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full text-sm font-bold bg-slate-700 text-white flex items-center justify-center shrink-0">
-                2
+              <span
+                className={`w-5 h-5 rounded-full text-sm font-bold flex items-center justify-center shrink-0 ${
+                  eventsCount > 0
+                    ? "bg-emerald-600 text-white"
+                    : "bg-slate-700 text-white"
+                }`}
+              >
+                {eventsCount > 0 ? (
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                ) : (
+                  "2"
+                )}
               </span>
               <h3 className="text-sm font-bold text-slate-900">
-                Review Schedule
+                Ambil Tugas OASE
               </h3>
             </div>
-            <p className="text-sm text-slate-500 pt-0.5">
+            <p className="text-sm text-slate-500">
               {eventsCount > 0
-                ? `${eventsCount} agenda ditemukan dari OASE.`
-                : "Tinjau daftar tugas & kuis dari OASE Moodle."}
+                ? `${eventsCount} tugas aktif siap disinkronkan.`
+                : "Masukkan NIM & password SSO Unud."}
             </p>
           </div>
 
-          <div className="pt-2.5 flex items-center gap-1 text-sm font-semibold text-[#005eb8] hover:underline">
-            <span>Lihat Jadwal</span>
+          <div className="pt-2 flex items-center gap-1 text-sm font-semibold text-[#005eb8] hover:underline">
+            <span>{eventsCount > 0 ? "Tinjau Tugas" : "Masuk OASE"}</span>
             <ArrowRight className="w-3 h-3" />
           </div>
         </div>
@@ -118,10 +128,10 @@ export function WorkflowStepper({
               onScrollToSync();
             }
           }}
-          className={`p-3.5 rounded-lg border transition-all flex flex-col justify-between cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#2c49b6] ${
+          className={`p-3 rounded-lg border transition-all flex flex-col justify-between cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#005eb8] ${
             hasSynced
-              ? "bg-emerald-50/30 border-emerald-200/80"
-              : "bg-slate-50/60 border-slate-200 hover:bg-slate-100/60"
+              ? "bg-emerald-50/40 border-emerald-200/80"
+              : "bg-slate-50/60 border-slate-200/80 hover:bg-slate-100/60"
           }`}
         >
           <div className="space-y-1">
@@ -135,20 +145,18 @@ export function WorkflowStepper({
               >
                 {hasSynced ? <CheckCircle2 className="w-3.5 h-3.5" /> : "3"}
               </span>
-              <h3 className="text-sm font-bold text-slate-900">
-                Sync Calendar
-              </h3>
+              <h3 className="text-sm font-bold text-slate-900">Sinkronkan</h3>
             </div>
-            <p className="text-sm text-slate-500 pt-0.5">
+            <p className="text-sm text-slate-500">
               {hasSynced
-                ? "Kalender berhasil disinkronkan."
-                : "Atur notifikasi dan mulai sinkronisasi."}
+                ? "Tugas telah masuk ke Google Calendar."
+                : "Atur alarm dan simpan jadwal."}
             </p>
           </div>
 
-          <div className="pt-2.5 flex items-center gap-1 text-sm font-semibold text-[#005eb8] hover:underline">
+          <div className="pt-2 flex items-center gap-1 text-sm font-semibold text-[#005eb8] hover:underline">
             <Layers className="w-3 h-3" />
-            <span>Sync Sekarang</span>
+            <span>{hasSynced ? "Sinkronkan Lagi" : "Mulai Sinkron"}</span>
           </div>
         </div>
       </div>

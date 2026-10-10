@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { syncOaseToGoogleCalendar } from '@/lib/sync';
 import { checkRateLimit, getClientIp, RATE_LIMIT_RULES } from '@/lib/rate-limit';
-import { verifyTurnstileToken } from '@/lib/captcha';
+import { isCaptchaRequestVerified } from '@/lib/captcha';
 import type { SyncOptions } from '@/types/calendar';
 
 export async function POST(request: Request) {
@@ -36,31 +36,37 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}));
 
     // 3. Verifikasi Cloudflare Turnstile (Anti-Bot & Anti-DDoS Otomatis)
-    // Lewatkan hanya jika dalam environment test lokal otomatis
-    const isTestEnv = process.env.NODE_ENV === 'test';
-    if (!isTestEnv) {
-      const captchaResult = await verifyTurnstileToken(body.turnstileToken, clientIp);
+    const captchaResult = await isCaptchaRequestVerified(
+      request,
+      clientIp,
+      body.turnstileToken
+    );
 
-      if (!captchaResult.valid) {
-        return NextResponse.json(
-          { error: captchaResult.error || 'Verifikasi keamanan bot gagal.', success: false },
-          { status: 403 }
-        );
-      }
+    if (!captchaResult.valid) {
+      return NextResponse.json(
+        { error: captchaResult.error || 'Verifikasi keamanan bot gagal.', success: false },
+        { status: 403 }
+      );
     }
 
     const options: SyncOptions = {
       calendarId: body.calendarId || 'primary',
       createDedicatedCalendar: Boolean(body.createDedicatedCalendar),
-      reminderMinutes: Array.isArray(body.reminderMinutes) ? body.reminderMinutes : [1440, 120],
-      customIcalUrl: body.customIcalUrl || undefined,
+      reminderMinutes: Array.isArray(body.reminderMinutes) ? body.reminderMinutes : [1440, 120, 30],
+      pendingTasks: Array.isArray(body.pendingTasks) ? body.pendingTasks : undefined,
+      oaseCredentials:
+        body.oaseCredentials ||
+        (body.username && body.password
+          ? { username: body.username, password: body.password }
+          : undefined),
     };
 
     const result = await syncOaseToGoogleCalendar(options);
 
+    const completedMsg = result.completed ? `, ${result.completed} selesai` : '';
     return NextResponse.json({
       success: true,
-      message: `Sinkronisasi selesai! ${result.created} dibuat, ${result.updated} diperbarui, ${result.skipped} dilewati.`,
+      message: `Sinkronisasi selesai! ${result.created} dibuat, ${result.updated} diperbarui${completedMsg}, ${result.skipped} dilewati.`,
       result,
     });
   } catch (error: unknown) {

@@ -15,14 +15,14 @@ const FAQS: FaqItem[] = [
       "Kalender OASE adalah aplikasi yang menghubungkan sistem pembelajaran daring OASE Moodle Universitas Udayana ke Google Calendar. Aplikasi ini mengekstrak kalender untuk menyinkronkan jadwal tugas, kuis, dan ujian secara otomatis dan terjadwal.",
   },
   {
-    question: "Bagaimana cara mendapatkan URL Kalender dari OASE UNUD?",
+    question: "Bagaimana cara mengambil daftar tugas dari OASE UNUD?",
     answer:
-      "Masuk ke portal OASE UNUD (oase.unud.ac.id), buka menu Calendar di sidebar, klik 'Import or export calendars', pilih 'Export calendar', tentukan 'All events' dan periode 'Recent and next 60 days', lalu klik 'Get calendar URL' untuk menyalin link ekspor iCal Anda.",
+      "Cukup masukkan NIM dan Password akun SSO Universitas Udayana Anda pada form Autentikasi Akun OASE. Sistem akan mengambil daftar tugas, kuis, dan ujian yang belum selesai secara langsung dari API resmi Moodle OASE.",
   },
   {
     question: "Apakah sinkronisasi kalender OASE ini aman dan menjaga privasi?",
     answer:
-      "Sangat aman. Aplikasi menerapkan arsitektur stateless tanpa database. Kredensial Google disimpan dalam cookie terenkripsi kuat menggunakan algoritma AES-256-GCM pada peramban Anda. Kami tidak pernah menyimpan kata sandi OASE maupun akun Google Anda.",
+      "Sangat aman. Aplikasi menerapkan arsitektur stateless tanpa database server. Kredensial SSO Anda hanya digunakan secara langsung untuk mengambil sesi tugas Moodle via koneksi terenkripsi (HTTPS). Kami tidak pernah menyimpan kata sandi Anda di database mana pun.",
   },
   {
     question:
@@ -32,9 +32,9 @@ const FAQS: FaqItem[] = [
   },
   {
     question:
-      "Apakah jadwal kuliah di Google Calendar akan bertumpuk atau terduplikasi?",
+      "Bagaimana aplikasi mengetahui jika tugas sudah selesai saya kumpulkan di OASE?",
     answer:
-      "Tidak. Jadwal yang sudah ada akan diperbarui jika terjadi perubahan waktu oleh dosen, jadwal baru akan ditambahkan, dan jadwal lama yang tidak berubah tidak akan diduplikasi.",
+      "Sistem memantau linimasa aktif Moodle OASE. Saat Anda mengumpulkan tugas di OASE, tugas tersebut otomatis hilang dari daftar pending dan di Google Calendar akan diperbarui dengan label '✅ [Selesai]' serta alarm pengingatnya dinonaktifkan.",
   },
   {
     question:

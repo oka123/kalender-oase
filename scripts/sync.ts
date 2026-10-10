@@ -10,7 +10,8 @@ async function runCliSync() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-  const icalUrl = process.env.OASE_ICAL_URL;
+  const oaseUsername = process.env.OASE_USERNAME;
+  const oasePassword = process.env.OASE_PASSWORD;
   const targetCalendarId = process.env.GOOGLE_CALENDAR_ID || 'dedicated';
 
   // Validasi environment variable
@@ -18,11 +19,12 @@ async function runCliSync() {
   if (!clientId) missingEnv.push('GOOGLE_CLIENT_ID');
   if (!clientSecret) missingEnv.push('GOOGLE_CLIENT_SECRET');
   if (!refreshToken) missingEnv.push('GOOGLE_REFRESH_TOKEN');
-  if (!icalUrl) missingEnv.push('OASE_ICAL_URL');
+  if (!oaseUsername) missingEnv.push('OASE_USERNAME');
+  if (!oasePassword) missingEnv.push('OASE_PASSWORD');
 
   if (missingEnv.length > 0) {
     console.error(`❌ GAGAL: Environment variable berikut belum dikonfigurasi: ${missingEnv.join(', ')}`);
-    console.error('Silakan atur variabel tersebut pada GitHub Repository Secrets.');
+    console.error('Silakan atur variabel tersebut pada file .env.local atau GitHub Repository Secrets.');
     process.exit(1);
   }
 
@@ -37,13 +39,16 @@ async function runCliSync() {
       refresh_token: refreshToken,
     });
 
-    console.log('📡 Mengambil dan memparsing feed iCal dari OASE UNUD...');
+    console.log('📡 Mengambil daftar tugas belum dikerjakan via API Moodle OASE...');
     const result = await syncOaseToGoogleCalendar(
       {
         calendarId: targetCalendarId,
         createDedicatedCalendar: targetCalendarId === 'dedicated',
-        reminderMinutes: [1440, 120], // 1 hari dan 2 jam sebelum deadline
-        customIcalUrl: icalUrl,
+        reminderMinutes: [1440, 120, 30], // 1 hari, 2 jam, dan 30 menit sebelum deadline
+        oaseCredentials: {
+          username: oaseUsername!,
+          password: oasePassword!,
+        },
       },
       oauth2Client
     );
@@ -53,6 +58,9 @@ async function runCliSync() {
     console.log(`📊 Total Acara      : ${result.totalEvents}`);
     console.log(`✨ Baru Ditambahkan : +${result.created}`);
     console.log(`🔄 Diperbarui       : ${result.updated}`);
+    if (result.completed) {
+      console.log(`✅ Selesai Dikerjakan: ${result.completed}`);
+    }
     console.log(`⏭️  Sudah Sinkron    : ${result.skipped}`);
 
     if (result.errors.length > 0) {

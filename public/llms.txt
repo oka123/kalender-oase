@@ -7,7 +7,7 @@ Kalender OASE adalah aplikasi berbasis web yang membantu mahasiswa dan dosen Uni
 ## Fitur Utama
 - **Sinkronisasi Otomatis & Terjadwal**: Mendukung sinkronisasi manual satu-klik dan sinkronisasi otomatis harian via GitHub Actions workflow (webhook trigger).
 - **Deteksi Event Pintar**: Mengurai jenis event secara otomatis: Tugas (Deadlines), Kuis (Quizzes), Pertemuan Kelas, dan Ujian Akhir/Tengah Semester.
-- **Arsitektur Stateless & Aman**: Tidak memerlukan database pengguna pusat. Kredensial OAuth Google disimpan aman dalam cookie peramban terenkripsi AES-256-GCM.
+- **Arsitektur Stateless & Aman**: Tidak memerlukan database pengguna pusat. Kredensial OAuth Google disimpan aman dalam cookie browser terenkripsi AES-256-GCM.
 - **Dukungan Multi-Kalender**: Opsi membuat kalender khusus (dedicated "Jadwal OASE") atau menyatukannya ke kalender utama (primary).
 - **Pengingat Fleksibel**: Menyiapkan notifikasi Google Calendar otomatis (1 hari, 2 jam, atau 30 menit sebelum acara).
 

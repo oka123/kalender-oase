@@ -69,6 +69,54 @@ test('Cloudflare Turnstile: handles missing server secret key gracefully', async
   }
 });
 
+test('Cloudflare Turnstile Cookie: signs and validates HMAC cookie securely', async () => {
+  const {
+    generateCaptchaCookieValue,
+    validateCaptchaCookieValue,
+    isCaptchaRequestVerified,
+    CAPTCHA_COOKIE_NAME,
+  } = await import('../lib/captcha.ts');
+
+  const ip = '192.0.2.88';
+  const validCookie = generateCaptchaCookieValue(ip);
+
+  // 1. Cookie valid harus lolos
+  assert.equal(validateCaptchaCookieValue(validCookie, ip), true);
+
+  // 2. Cookie dengan IP berbeda harus ditolak jika IP diperiksa
+  assert.equal(validateCaptchaCookieValue(validCookie, '203.0.113.1'), false);
+
+  // 3. Cookie dengan tanda tangan dipalsukan harus ditolak
+  const tamperedCookie = validCookie.slice(0, -4) + 'abcd';
+  assert.equal(validateCaptchaCookieValue(tamperedCookie, ip), false);
+
+  // 4. Cookie kadaluarsa (misal dibuat 3 jam yang lalu) harus ditolak
+  const pastTimestamp = Date.now() - 3 * 60 * 60 * 1000;
+  const expiredCookie = `${pastTimestamp}.invalidhmac`;
+  assert.equal(validateCaptchaCookieValue(expiredCookie, ip), false);
+
+  // 5. isCaptchaRequestVerified dengan cookie valid di request
+  const reqWithCookie = new Request('http://localhost/api/preview', {
+    headers: {
+      cookie: `${CAPTCHA_COOKIE_NAME}=${encodeURIComponent(validCookie)}`,
+    },
+  });
+  const checkResult = await isCaptchaRequestVerified(reqWithCookie, ip);
+  assert.equal(checkResult.valid, true);
+
+  // 6. Request tanpa cookie pada NODE_ENV production harus ditolak
+  const origEnv = process.env.NODE_ENV;
+  try {
+    (process.env as Record<string, string | undefined>)['NODE_ENV'] = 'production';
+    const reqWithoutCookie = new Request('http://localhost/api/preview');
+    const rejectedCheck = await isCaptchaRequestVerified(reqWithoutCookie, ip);
+    assert.equal(rejectedCheck.valid, false);
+    assert.ok(rejectedCheck.error?.includes('Turnstile'));
+  } finally {
+    (process.env as Record<string, string | undefined>)['NODE_ENV'] = origEnv;
+  }
+});
+
 test('SSRF Protection: validateAndNormalizeIcalUrl rejects disallowed hostnames and protocols', () => {
   // Hanya https://oase.unud.ac.id yang diizinkan
   assert.doesNotThrow(() => {
@@ -109,3 +157,24 @@ test('SEO & Site URL: getBaseUrl resolves valid domain and ignores localhost in 
     }
   }
 });
+
+test('Security Headers: next.config.ts configures defense-in-depth HTTP headers', async () => {
+  const nextConfigModule = await import('../next.config.ts');
+  const config = nextConfigModule.default;
+
+  assert.ok(typeof config.headers === 'function', 'next.config.ts should define async headers()');
+  const headerRules = await config.headers();
+  assert.ok(Array.isArray(headerRules), 'headers() should return an array of route rules');
+
+  const globalRule = headerRules.find((r: { source: string }) => r.source === '/:path*');
+  assert.ok(globalRule, 'Global route rule /:path* should exist');
+
+  const headers = globalRule.headers as { key: string; value: string }[];
+  const headerMap = new Map(headers.map((h) => [h.key.toLowerCase(), h.value]));
+
+  assert.equal(headerMap.get('x-frame-options'), 'DENY');
+  assert.equal(headerMap.get('x-content-type-options'), 'nosniff');
+  assert.equal(headerMap.get('referrer-policy'), 'strict-origin-when-cross-origin');
+  assert.ok(headerMap.has('permissions-policy'));
+});
+

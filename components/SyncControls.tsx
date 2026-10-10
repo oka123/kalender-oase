@@ -10,10 +10,8 @@ import {
   Layers,
   ArrowRight,
   ExternalLink,
-  ShieldAlert,
 } from "lucide-react";
 import type { GoogleCalendarItem, SyncResult } from "@/types/calendar";
-import { SecurityCaptcha, type CaptchaState } from "./SecurityCaptcha";
 
 interface SyncControlsProps {
   isAuthenticated: boolean;
@@ -27,6 +25,8 @@ interface SyncControlsProps {
   isSyncing: boolean;
   syncResult: SyncResult | null;
   onLoginRequest: () => void;
+  isCaptchaVerified?: boolean;
+  hasTasks?: boolean;
 }
 
 export function SyncControls({
@@ -36,6 +36,8 @@ export function SyncControls({
   isSyncing,
   syncResult,
   onLoginRequest,
+  isCaptchaVerified = true,
+  hasTasks = true,
 }: SyncControlsProps) {
   const [calendarMode, setCalendarMode] = useState<
     "dedicated" | "primary" | "custom"
@@ -44,10 +46,7 @@ export function SyncControls({
     useState<string>("primary");
   const [reminder1Day, setReminder1Day] = useState(true);
   const [reminder2Hours, setReminder2Hours] = useState(true);
-  const [reminder30Mins, setReminder30Mins] = useState(false);
-  const [captchaState, setCaptchaState] = useState<CaptchaState>({
-    isVerified: false,
-  });
+  const [reminder30Mins, setReminder30Mins] = useState(true);
 
   const handleStartSync = async () => {
     if (!isAuthenticated) {
@@ -55,7 +54,10 @@ export function SyncControls({
       return;
     }
 
-    if (!captchaState.isVerified) {
+    if (!isCaptchaVerified) {
+      document
+        .getElementById("security-verification")
+        ?.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
@@ -75,7 +77,6 @@ export function SyncControls({
       calendarId: targetId,
       createDedicatedCalendar: isDedicated,
       reminderMinutes: reminders,
-      turnstileToken: captchaState.turnstileToken,
     });
   };
 
@@ -94,14 +95,14 @@ export function SyncControls({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Kolom 1: Pilihan Kalender Tujuan */}
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider block">
+          <label className="text-sm font-semibold text-slate-500 uppercase tracking-wider block">
             Kalender Tujuan
           </label>
           <div className="space-y-1.5">
             <label
               className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
                 calendarMode === "dedicated"
-                  ? "border-[#2c49b6] bg-blue-50/50 shadow-2xs"
+                  ? "border-[#005eb8] bg-blue-50/50 shadow-2xs"
                   : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
@@ -110,7 +111,7 @@ export function SyncControls({
                 name="calMode"
                 checked={calendarMode === "dedicated"}
                 onChange={() => setCalendarMode("dedicated")}
-                className="text-[#2c49b6] focus:ring-[#2c49b6]"
+                className="text-[#005eb8] focus:ring-[#005eb8]"
               />
               <div className="text-sm font-semibold text-slate-800 flex items-center justify-between flex-1">
                 <span>Kalender Khusus &quot;OASE UNUD&quot;</span>
@@ -123,7 +124,7 @@ export function SyncControls({
             <label
               className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
                 calendarMode === "primary"
-                  ? "border-[#2c49b6] bg-blue-50/50 shadow-2xs"
+                  ? "border-[#005eb8] bg-blue-50/50 shadow-2xs"
                   : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
@@ -132,7 +133,7 @@ export function SyncControls({
                 name="calMode"
                 checked={calendarMode === "primary"}
                 onChange={() => setCalendarMode("primary")}
-                className="text-[#2c49b6] focus:ring-[#2c49b6]"
+                className="text-[#005eb8] focus:ring-[#005eb8]"
               />
               <div className="text-sm font-semibold text-slate-800">
                 Kalender Utama (Primary)
@@ -143,7 +144,7 @@ export function SyncControls({
               <label
                 className={`flex items-start gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
                   calendarMode === "custom"
-                    ? "border-[#2c49b6] bg-blue-50/50 shadow-2xs"
+                    ? "border-[#005eb8] bg-blue-50/50 shadow-2xs"
                     : "border-slate-200 hover:border-slate-300 bg-white"
                 }`}
               >
@@ -152,7 +153,7 @@ export function SyncControls({
                   name="calMode"
                   checked={calendarMode === "custom"}
                   onChange={() => setCalendarMode("custom")}
-                  className="mt-0.5 text-[#2c49b6] focus:ring-[#2c49b6]"
+                  className="mt-0.5 text-[#005eb8] focus:ring-[#005eb8]"
                 />
                 <div className="text-sm flex-1">
                   <div className="font-semibold text-slate-800">
@@ -162,7 +163,7 @@ export function SyncControls({
                     <select
                       value={selectedCalendarId}
                       onChange={(e) => setSelectedCalendarId(e.target.value)}
-                      className="mt-1.5 block w-full text-sm rounded border border-slate-300 bg-white py-1 px-2 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#2c49b6]"
+                      className="mt-1.5 block w-full text-sm rounded border border-slate-300 bg-white py-1 px-2 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#005eb8]"
                     >
                       {calendars.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -179,7 +180,7 @@ export function SyncControls({
 
         {/* Kolom 2: Pengaturan Notifikasi Alarm */}
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider block">
+          <label className="text-sm font-semibold text-slate-500 uppercase tracking-wider block">
             Notifikasi Pengingat
           </label>
           <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/60 space-y-2">
@@ -188,7 +189,7 @@ export function SyncControls({
                 type="checkbox"
                 checked={reminder1Day}
                 onChange={(e) => setReminder1Day(e.target.checked)}
-                className="rounded border-slate-300 text-[#2c49b6] focus:ring-[#2c49b6]"
+                className="rounded border-slate-300 text-[#005eb8] focus:ring-[#005eb8]"
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-amber-500" />
@@ -201,7 +202,7 @@ export function SyncControls({
                 type="checkbox"
                 checked={reminder2Hours}
                 onChange={(e) => setReminder2Hours(e.target.checked)}
-                className="rounded border-slate-300 text-[#2c49b6] focus:ring-[#2c49b6]"
+                className="rounded border-slate-300 text-[#005eb8] focus:ring-[#005eb8]"
               />
               <span className="flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5 text-amber-500" />
@@ -214,10 +215,10 @@ export function SyncControls({
                 type="checkbox"
                 checked={reminder30Mins}
                 onChange={(e) => setReminder30Mins(e.target.checked)}
-                className="rounded border-slate-300 text-[#2c49b6] focus:ring-[#2c49b6]"
+                className="rounded border-slate-300 text-[#005eb8] focus:ring-[#005eb8]"
               />
               <span className="flex items-center gap-1.5">
-                <Bell className="w-3.5 h-3.5 text-slate-400" />
+                <Bell className="w-3.5 h-3.5 text-amber-500" />
                 <span>30 menit sebelumnya</span>
               </span>
             </label>
@@ -225,24 +226,20 @@ export function SyncControls({
         </div>
       </div>
 
-      {/* Proteksi Keamanan Bot / DDoS & Tombol Aksi Sinkronisasi */}
-      <div className="pt-2 space-y-4">
-        {isAuthenticated && (
-          <SecurityCaptcha onVerifyChange={setCaptchaState} />
-        )}
-
+      {/* Tombol Aksi Sinkronisasi */}
+      <div className="pt-2">
         {isAuthenticated ? (
           <div className="space-y-2">
             <button
               type="button"
               onClick={handleStartSync}
-              disabled={isSyncing || !captchaState.isVerified}
-              className={`w-full py-3.5 px-6 rounded-md font-semibold text-sm text-white shadow-sm transition-all flex items-center justify-center gap-2 ${
+              disabled={isSyncing || !isCaptchaVerified || !hasTasks}
+              className={`w-full py-3 px-6 rounded-lg font-semibold text-sm shadow-xs transition-all flex items-center justify-center gap-2 ${
                 isSyncing
-                  ? "bg-[#2c49b6]/80 cursor-wait"
-                  : !captchaState.isVerified
-                    ? "bg-slate-300 text-slate-500 cursor-not-allowed"
-                    : "bg-[#005eb8] hover:bg-[#004ba8] active:scale-[0.99] cursor-pointer"
+                  ? "bg-[#005eb8]/80 text-white cursor-wait"
+                  : !isCaptchaVerified || !hasTasks
+                    ? "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                    : "bg-[#001d62] hover:bg-[#002888] active:scale-[0.99] text-white cursor-pointer"
               }`}
             >
               <RefreshCw
@@ -251,29 +248,22 @@ export function SyncControls({
               <span>
                 {isSyncing
                   ? "Menyinkronkan ke Google Calendar..."
-                  : !captchaState.isVerified
-                    ? "Selesaikan verifikasi keamanan di atas"
-                    : "Sinkronkan ke Google Calendar"}
+                  : !isCaptchaVerified
+                    ? "Verifikasi Keamanan Diperlukan"
+                    : !hasTasks
+                      ? "Ambil Tugas OASE Terlebih Dahulu"
+                      : "Sinkronkan ke Google Calendar"}
               </span>
             </button>
-            {!captchaState.isVerified && (
-              <p className="text-sm text-slate-500 text-center flex items-center justify-center gap-1.5">
-                <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
-                <span>
-                  Selesaikan verifikasi keamanan untuk mengaktifkan tombol
-                  sinkronisasi.
-                </span>
-              </p>
-            )}
           </div>
         ) : (
           <button
             type="button"
             onClick={onLoginRequest}
-            className="w-full py-3.5 px-6 rounded-md font-semibold text-sm text-white bg-[#2c49b6] hover:bg-[#22398d] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-6 rounded-lg font-semibold text-sm text-white bg-[#005eb8] hover:bg-[#004ba8] shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Calendar className="w-4 h-4 text-amber-300" />
-            <span>Connect Google Calendar</span>
+            <Calendar className="w-4 h-4 text-white" />
+            <span>Hubungkan Google Calendar</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         )}

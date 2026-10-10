@@ -33,7 +33,7 @@ export function GithubActionsModal({
     let ignore = false;
     async function loadToken() {
       try {
-        const res = await fetch("/api/auth/token");
+        const res = await fetch("/api/auth/token", { method: "POST" });
         if (res.ok) {
           const data = await res.json();
           if (!ignore && data.refreshToken) {
@@ -98,9 +98,7 @@ export function GithubActionsModal({
           <div className="bg-blue-50/80 border border-blue-200 rounded-lg p-3.5 text-blue-900 space-y-1">
             <div className="font-bold flex items-center gap-1.5 text-sm">
               <GitBranch className="w-4 h-4 text-[#2c49b6]" />
-              <span>
-                Sinkronisasi Otomatis via Webhook
-              </span>
+              <span>Sinkronisasi Otomatis via Webhook</span>
             </div>
             <p className="text-sm leading-relaxed">
               Workflow <code>.github/workflows/sync.yml</code> akan memanggil
@@ -168,6 +166,21 @@ export function GithubActionsModal({
                   CRON_SECRET
                 </span>
                 : Buat string acak rahasia untuk mengamankan webhook
+              </div>
+
+              {/* OASE_USERNAME & OASE_PASSWORD */}
+              <div className="text-sm text-slate-600 border-t border-slate-200 pt-2">
+                <span className="font-mono font-bold text-slate-800">
+                  OASE_USERNAME &amp; OASE_PASSWORD
+                </span>
+                <span className="text-sm text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded ml-1 font-semibold">
+                  Wajib untuk Sinkronisasi Otomatis
+                </span>
+                <p className="text-sm text-slate-500 mt-0.5 leading-relaxed">
+                  Masukkan NIM dan password SSO Unud Anda di Vercel Environment
+                  Variables agar cron job dapat mengambil tugas aktif dari
+                  Moodle OASE
+                </p>
               </div>
             </div>
           </div>

@@ -1,7 +1,8 @@
 import { google, type calendar_v3 } from "googleapis";
 import type { SyncOptions, SyncResult } from "../types/calendar.ts";
 import { getAuthenticatedOAuth2Client } from "./google.ts";
-import { fetchAndParseIcal } from "./ical.ts";
+import { convertMoodleTasksToOaseEvents } from "./moodle.ts";
+import { fetchPendingOaseTasks } from "./oase-auth.ts";
 import {
   buildEventDescription,
   buildReminderOverrides,
@@ -59,7 +60,7 @@ export async function getOrCreateDedicatedCalendar(
 }
 
 /**
- * Eksekusi proses sinkronisasi event iCal OASE ke Google Calendar
+ * Eksekusi proses sinkronisasi daftar tugas aktif OASE ke Google Calendar
  */
 export async function syncOaseToGoogleCalendar(
   options: SyncOptions,
@@ -94,8 +95,22 @@ export async function syncOaseToGoogleCalendar(
     }
   }
 
-  // 2. Ambil event dari iCal OASE
-  const oaseEvents = await fetchAndParseIcal(options.customIcalUrl);
+  // 2. Ambil daftar tugas yang belum dikerjakan dari Moodle AJAX API
+  let rawTasks = options.pendingTasks;
+  if (!rawTasks && options.oaseCredentials?.username && options.oaseCredentials?.password) {
+    rawTasks = await fetchPendingOaseTasks(
+      options.oaseCredentials.username,
+      options.oaseCredentials.password
+    );
+  }
+
+  if (!rawTasks) {
+    throw new Error(
+      "Tidak ada data tugas OASE untuk disinkronkan. Silakan muat daftar tugas menggunakan username dan password SSO Unud Anda terlebih dahulu."
+    );
+  }
+
+  const oaseEvents = convertMoodleTasksToOaseEvents(rawTasks);
 
   // 3. Ambil daftar event yang sudah tersinkronisasi di Google Calendar
   // Ambil event dari 60 hari yang lalu hingga 1 tahun ke depan untuk menghemat quota
@@ -120,15 +135,18 @@ export async function syncOaseToGoogleCalendar(
   }
 
   const reminders = buildReminderOverrides(
-    options.reminderMinutes || [1440, 120],
+    options.reminderMinutes || [1440, 120, 30],
   );
 
   let created = 0;
   let updated = 0;
+  let completed = 0;
   let skipped = 0;
   const errors: SyncResult["errors"] = [];
 
-  // 4. Proses setiap event dari OASE
+  const pendingUidSet = new Set(oaseEvents.map((e) => e.uid));
+
+  // 4. Proses setiap event yang aktif/belum selesai dari OASE
   for (const event of oaseEvents) {
     try {
       const formattedDescription = buildEventDescription(event);
@@ -151,6 +169,7 @@ export async function syncOaseToGoogleCalendar(
             oase_event_id: event.uid,
             oase_course: event.courseName,
             oase_type: event.eventType,
+            oase_completed: "false",
             oase_last_synced: new Date().toISOString(),
           },
         },
@@ -165,7 +184,9 @@ export async function syncOaseToGoogleCalendar(
         created++;
       } else {
         // Event sudah ada: Cek apakah ada perubahan
-        if (isEventChanged(existingGoogleEvent, event, formattedDescription)) {
+        // Jika sebelumnya sempat ditandai selesai tapi kembali muncul di pending list, reset status selesainya
+        const wasCompleted = existingGoogleEvent.summary?.startsWith("✅ [Selesai]");
+        if (wasCompleted || isEventChanged(existingGoogleEvent, event, formattedDescription)) {
           await calendar.events.patch({
             calendarId: targetCalendarId,
             eventId: existingGoogleEvent.id,
@@ -190,10 +211,62 @@ export async function syncOaseToGoogleCalendar(
     }
   }
 
+  // 5. Tandai tugas-tugas di Google Calendar yang sudah tidak ada di daftar pending tugas sebagai SELESAI
+  const yesterdayTime = Date.now() - 24 * 60 * 60 * 1000;
+
+    for (const item of existingItems) {
+      const oaseId = item.extendedProperties?.private?.oase_event_id;
+      if (!oaseId || !item.id) continue;
+
+      // Jika ID tidak ada di daftar pending tugas
+      if (!pendingUidSet.has(oaseId)) {
+        const itemStartTime = item.start?.dateTime ? new Date(item.start.dateTime).getTime() : 0;
+        // Hanya tandai jika tugas belum kadaluarsa jauh (misal dalam 30 hari terakhir atau masa depan)
+        const isRecentOrFuture = itemStartTime >= yesterdayTime - 30 * 24 * 60 * 60 * 1000;
+        const currentSummary = item.summary || "";
+        const isAlreadyMarked = currentSummary.startsWith("✅ [Selesai]");
+
+        if (isRecentOrFuture && !isAlreadyMarked) {
+          try {
+            const cleanTitle = currentSummary.replace(/^✅\s*\[Selesai\]\s*/i, "").trim();
+            await calendar.events.patch({
+              calendarId: targetCalendarId,
+              eventId: item.id,
+              requestBody: {
+                summary: `✅ [Selesai] ${cleanTitle}`,
+                // Hapus pengingat/alarm karena tugas sudah dikerjakan
+                reminders: {
+                  useDefault: false,
+                  overrides: [],
+                },
+                extendedProperties: {
+                  private: {
+                    ...item.extendedProperties?.private,
+                    oase_completed: "true",
+                    oase_completed_at: new Date().toISOString(),
+                  },
+                },
+              },
+            });
+            completed++;
+            await new Promise((resolve) => setTimeout(resolve, 60));
+          } catch (err: unknown) {
+            const errorMsg = err instanceof Error ? err.message : "Gagal menandai tugas selesai";
+            errors.push({
+              eventId: oaseId,
+              title: currentSummary,
+              message: errorMsg,
+            });
+          }
+        }
+      }
+    }
+
   return {
     totalEvents: oaseEvents.length,
     created,
     updated,
+    completed,
     skipped,
     errors,
     calendarName: targetCalendarName,

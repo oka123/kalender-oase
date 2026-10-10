@@ -50,20 +50,20 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
     if (diffHours < 0) {
       return (
         <span className="text-sm font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-500">
-          Selesai
+          Lewat
         </span>
       );
     }
     if (diffHours <= 24) {
       return (
-        <span className="text-sm font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-700">
-          Hari ini ({Math.ceil(diffHours)} jam)
+        <span className="text-sm font-semibold px-2 py-0.5 rounded bg-rose-50 border border-rose-200/80 text-rose-700">
+          Hari ini ({Math.ceil(diffHours)}j)
         </span>
       );
     }
     if (diffHours <= 48) {
       return (
-        <span className="text-sm font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
+        <span className="text-sm font-semibold px-2 py-0.5 rounded bg-amber-50 border border-amber-200/80 text-amber-800">
           Besok
         </span>
       );
@@ -71,7 +71,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
     const days = Math.ceil(diffHours / 24);
     return (
       <span className="text-sm font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
-        {days} hari
+        {days} hari lagi
       </span>
     );
   };
@@ -84,10 +84,8 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
       {/* Header Minimalis */}
       <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-[#2c49b6]" />
-          <h2 className="text-base font-bold text-slate-900">
-            Agenda Kegiatan
-          </h2>
+          <Calendar className="w-4 h-4 text-[#005eb8]" />
+          <h2 className="text-base font-bold text-slate-900">Daftar Tugas</h2>
           <span className="text-sm font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
             {events.length}
           </span>
@@ -103,7 +101,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
           <RefreshCw
             className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`}
           />
-          <span>Refresh</span>
+          <span>Perbarui</span>
         </button>
       </div>
 
@@ -115,7 +113,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Cari mata kuliah atau kegiatan..."
-          className="w-full pl-9 pr-9 py-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-[#2c49b6] focus:border-[#2c49b6] bg-slate-50/50 hover:bg-white focus:bg-white transition-all"
+          className="w-full pl-9 pr-9 py-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-[#005eb8] focus:border-[#005eb8] bg-slate-50/50 hover:bg-white focus:bg-white transition-all"
         />
         {searchQuery && (
           <button
@@ -149,7 +147,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
         <div className="py-10 text-center text-slate-500 space-y-1.5 border border-dashed border-slate-200 rounded-lg bg-slate-50/40">
           <BookOpen className="w-6 h-6 mx-auto text-slate-400" />
           <p className="text-sm font-medium text-slate-700">
-            {searchQuery ? "Agenda tidak ditemukan" : "Tidak ada agenda"}
+            {searchQuery ? "Tugas tidak ditemukan" : "Tidak ada tugas"}
           </p>
         </div>
       ) : (
@@ -172,7 +170,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                 key={event.uid}
                 className={`border rounded-lg bg-white transition-all overflow-hidden ${
                   isExpanded
-                    ? "border-[#2c49b6]/40 shadow-xs ring-1 ring-[#2c49b6]/15"
+                    ? "border-[#005eb8]/40 shadow-xs ring-1 ring-[#005eb8]/15"
                     : "border-slate-200/90 hover:border-slate-300 hover:shadow-xs"
                 }`}
               >
@@ -192,7 +190,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span
-                      className="text-sm font-semibold text-slate-700 truncate max-w-50"
+                      className="text-sm font-semibold text-slate-600 truncate max-w-50"
                       title={event.courseName}
                     >
                       {event.courseName}
@@ -201,7 +199,7 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
                       {getDeadlineBadge(startDate)}
                       <ChevronDown
                         className={`w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform duration-200 ${
-                          isExpanded ? "rotate-180 text-[#2c49b6]" : ""
+                          isExpanded ? "rotate-180 text-[#005eb8]" : ""
                         }`}
                       />
                     </div>
@@ -213,25 +211,27 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
 
                   <div className="flex items-center justify-between gap-2 text-sm text-slate-500 pt-0.5">
                     <span className="flex items-center gap-1 text-slate-600 font-medium">
-                      <Clock className="w-3.5 h-3.5 text-[#2c49b6] shrink-0" />
+                      <Clock className="w-3.5 h-3.5 text-[#005eb8] shrink-0" />
                       <span>
                         {dateStr} &bull; {timeStr} WITA
                       </span>
                     </span>
 
-                    {event.url && (
-                      <a
-                        href={event.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-[#005eb8] hover:text-[#001d62] font-semibold hover:underline"
-                        title="Buka di OASE"
-                      >
-                        <span>OASE</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
+                    {event.url &&
+                      (event.url.startsWith("https://") ||
+                        event.url.startsWith("http://")) && (
+                        <a
+                          href={event.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1 text-[#005eb8] hover:text-[#001d62] font-semibold hover:underline"
+                          title="Buka di OASE"
+                        >
+                          <span>OASE</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
                   </div>
                 </div>
 
@@ -250,19 +250,26 @@ export function EventsList({ events, isLoading, onRefresh }: EventsListProps) {
 
                     {event.links && event.links.length > 0 && (
                       <div className="pt-1.5 border-t border-slate-200/60 space-y-1">
-                        {event.links.map((link, idx) => (
-                          <a
-                            key={idx}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline flex items-center gap-1 truncate"
-                          >
-                            <span>{link.label || "Lampiran"}:</span>
-                            <span className="truncate">{link.url}</span>
-                            <ExternalLink className="w-3 h-3 shrink-0" />
-                          </a>
-                        ))}
+                        {event.links
+                          .filter(
+                            (link) =>
+                              link.url &&
+                              (link.url.startsWith("https://") ||
+                                link.url.startsWith("http://")),
+                          )
+                          .map((link, idx) => (
+                            <a
+                              key={idx}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline flex items-center gap-1 truncate"
+                            >
+                              <span>{link.label || "Lampiran"}:</span>
+                              <span className="truncate">{link.url}</span>
+                              <ExternalLink className="w-3 h-3 shrink-0" />
+                            </a>
+                          ))}
                       </div>
                     )}
                   </div>
