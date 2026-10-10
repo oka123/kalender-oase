@@ -20,8 +20,7 @@ const baseUrl = getBaseUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default:
-      "OASE UNUD — Kalender & Sinkronisasi Tugas OASE Moodle Universitas Udayana",
+    default: "OASE UNUD — Kalender Tugas Kuliah Universitas Udayana",
     template: "%s | Kalender OASE UNUD",
   },
   description:
@@ -50,7 +49,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "OASE UNUD — Kalender & Sinkronisasi Tugas OASE Moodle",
+    title: "OASE UNUD — Kalender Tugas Kuliah Universitas Udayana",
     description:
       "Hubungkan dan sinkronkan tugas, deadline, dan kuis OASE Moodle UNUD ke Google Calendar Anda secara instan dan otomatis.",
     url: baseUrl,
@@ -68,7 +67,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "OASE UNUD — Kalender & Sinkronisasi Tugas OASE Moodle",
+    title: "OASE UNUD — Kalender Tugas Kuliah Universitas Udayana",
     description:
       "Sinkronisasi jadwal tugas, kuis, dan ujian dari OASE UNUD ke Google Calendar.",
     images: ["/logo.webp"],
