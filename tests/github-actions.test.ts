@@ -44,7 +44,14 @@ test('GitHub Actions Webhook: rejects requests without valid Authorization heade
     assert.ok(data.error?.includes('Tidak diizinkan'), 'Pesan error harus mengindikasikan kredensial tidak valid');
   } catch (err: unknown) {
     // Jika server dev sedang tidak berjalan di port 3000 saat test dijalankan, lewati test koneksi langsung
-    const isConnRefused = err instanceof Error && 'code' in err && (err as { code?: string }).code === 'ECONNREFUSED';
+    const isConnRefused =
+      (err instanceof Error &&
+        "code" in err &&
+        (err as { code?: string }).code === "ECONNREFUSED") ||
+      (err instanceof Error &&
+        "cause" in err &&
+        typeof (err as { cause?: { code?: string } }).cause === "object" &&
+        (err as { cause?: { code?: string } }).cause?.code === "ECONNREFUSED");
     if (!isConnRefused) {
       throw err;
     }

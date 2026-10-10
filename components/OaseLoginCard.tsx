@@ -81,6 +81,26 @@ export function OaseLoginCard({
       localStorage.removeItem("oase_password");
 
       await onFetchTasks({ username: username.trim(), password });
+
+      // Picu pop-up simpan kata sandi bawaan browser via W3C Credential Management API
+      if (
+        typeof window !== "undefined" &&
+        "PasswordCredential" in window &&
+        navigator.credentials
+      ) {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const CredentialConstructor = (window as any).PasswordCredential;
+          const cred = new CredentialConstructor({
+            id: username.trim(),
+            password,
+            name: username.trim(),
+          });
+          await navigator.credentials.store(cred);
+        } catch {
+          // Abaikan jika browser tidak mengizinkan atau pengguna menolak
+        }
+      }
     } catch (err: unknown) {
       const msg =
         err instanceof Error
@@ -134,7 +154,12 @@ export function OaseLoginCard({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3.5">
+      <form
+        onSubmit={handleSubmit}
+        method="post"
+        action="#"
+        className="space-y-3.5"
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           {/* Input Username / NIM */}
           <div className="space-y-1.5">
@@ -146,7 +171,9 @@ export function OaseLoginCard({
             </label>
             <input
               id="oase-username"
+              name="username"
               type="text"
+              autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Contoh: 2408561001"
@@ -167,7 +194,9 @@ export function OaseLoginCard({
             <div className="relative">
               <input
                 id="oase-password"
+                name="password"
                 type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Masukkan password SSO Anda"
