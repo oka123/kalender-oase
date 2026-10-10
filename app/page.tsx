@@ -101,9 +101,7 @@ function DashboardContent() {
           setEvents(data.events || []);
           setRawTasks(data.rawTasks || []);
           setCredentials(creds);
-          toast.success(
-            `Berhasil memuat ${data.total} tugas aktif dari OASE!`,
-          );
+          toast.success(`Berhasil memuat ${data.total} tugas aktif dari OASE!`);
         } else {
           throw new Error(
             data.error || "Gagal mengambil daftar tugas dari OASE.",
@@ -284,11 +282,11 @@ function DashboardContent() {
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="max-w-2xl space-y-2">
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                Kalender OASE
+                Kalender OASE UNUD
               </h1>
               <p className="text-sm text-blue-100/90 leading-relaxed">
-                Sinkronisasi jadwal tugas dan kegiatan aktif dari OASE Moodle ke
-                Google Calendar secara otomatis.
+                Sinkronisasi jadwal tugas perkuliahan dari OASE Universitas
+                Udayana ke Google Calendar secara otomatis.
               </p>
             </div>
 

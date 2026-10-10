@@ -1,24 +1,35 @@
-# Kalender OASE (Universitas Udayana)
-> Utilitas open-source untuk sinkronisasi otomatis jadwal akademik dari portal Moodle OASE Universitas Udayana ke Google Calendar.
+# OASE UNUD — Kalender OASE (Universitas Udayana)
+> Portal sinkronisasi otomatis jadwal tugas kuliah dari OASE Universitas Udayana ke Google Calendar.
 
 ## Deskripsi Singkat
-Kalender OASE adalah aplikasi berbasis web yang membantu mahasiswa dan dosen Universitas Udayana (UNUD) mengonversi dan menyinkronkan agenda perkuliahan, tenggat waktu tugas, kuis, serta ujian dari feed iCalendar (.ics) OASE Moodle langsung ke Google Calendar secara berkala.
+Kalender OASE UNUD adalah aplikasi berbasis web yang membantu mahasiswa dan dosen Universitas Udayana (UNUD) mengambil daftar tugas aktif dari OASE (https://oase.unud.ac.id/) dan menyinkronkannya langsung ke Google Calendar secara instan dan otomatis.
+
+## Kata Kunci & Relevansi
+- OASE
+- OASE UNUD
+- OASE Universitas Udayana
+- Portal OASE
+- Moodle OASE
+- Kalender OASE UNUD
+- Sync OASE ke Google Calendar
+- Jadwal Tugas OASE
+- Deadline OASE UNUD
 
 ## Fitur Utama
-- **Sinkronisasi Otomatis & Terjadwal**: Mendukung sinkronisasi manual satu-klik dan sinkronisasi otomatis harian via GitHub Actions workflow (webhook trigger).
-- **Deteksi Event Pintar**: Mengurai jenis event secara otomatis: Tugas (Deadlines), Kuis (Quizzes), Pertemuan Kelas, dan Ujian Akhir/Tengah Semester.
-- **Arsitektur Stateless & Aman**: Tidak memerlukan database pengguna pusat. Kredensial OAuth Google disimpan aman dalam cookie browser terenkripsi AES-256-GCM.
-- **Dukungan Multi-Kalender**: Opsi membuat kalender khusus (dedicated "Jadwal OASE") atau menyatukannya ke kalender utama (primary).
-- **Pengingat Fleksibel**: Menyiapkan notifikasi Google Calendar otomatis (1 hari, 2 jam, atau 30 menit sebelum acara).
+- **Integrasi Langsung Akun OASE**: Cukup masukkan NIM dan Password SSO Unud pada form web untuk menarik daftar tugas aktif dari API resmi Moodle OASE secara terenkripsi dan aman.
+- **Sinkronisasi Otomatis & Terjadwal**: Mendukung sinkronisasi manual satu-klik ke Google Calendar dan sinkronisasi otomatis terjadwal via GitHub Actions workflow (webhook trigger).
+- **Deteksi Event Pintar**: Mengurai jenis event secara otomatis: Tugas (Deadlines), Kuis (Quizzes), Pertemuan Kelas, dan Ujian Akhir/Tengah Semester. Tugas yang telah selesai dikumpulkan di OASE otomatis ditandai `✅ [Selesai]`.
+- **Arsitektur Stateless & Aman**: Tidak memerlukan database pengguna pusat. Kredensial SSO Anda tidak pernah disimpan di database mana pun. Sesi Google disimpan dalam cookie browser terenkripsi AES-256-GCM.
+- **Pilihan Kalender Fleksibel**: Pilihan membuat kalender khusus (dedicated "OASE UNUD") atau menyatukannya ke kalender utama (primary).
+- **Pengingat Deadline**: Alarm notifikasi Google Calendar otomatis (1 hari, 2 jam, atau 30 menit sebelum batas pengumpulan tugas).
 
-## Cara Mendapatkan URL Kalender OASE UNUD
-1. Masuk ke portal OASE UNUD (https://oase.unud.ac.id/).
-2. Buka menu **Calendar** di bilah sisi (sidebar).
-3. Gulir ke bawah dan klik tombol **Import or export calendars**.
-4. Pilih opsi **Export calendar**.
-5. Pada pilihan *Events to export*, pilih **All events**; pada *Time period*, pilih **Recent and next 60 days**.
-6. Klik tombol **Get calendar URL** lalu salin link yang dihasilkan.
-7. Tempelkan link tersebut pada kolom konfigurasi di aplikasi Kalender OASE.
+## Cara Menggunakan Kalender OASE UNUD
+1. Buka aplikasi Kalender OASE di browser (https://kalender-oase.vercel.app/).
+2. Selesaikan verifikasi keamanan Cloudflare Turnstile.
+3. Hubungkan akun Google Calendar Anda melalui tombol otentikasi resmi Google OAuth.
+4. Masukkan NIM dan Password SSO Unud Anda pada bagian Akun OASE Moodle, lalu klik **Ambil Daftar Tugas**.
+5. Pilih kalender tujuan dan preferensi pengingat, kemudian klik **Sinkronkan ke Google Calendar**.
+6. (Opsional) Konfigurasikan GitHub Actions gratis agar jadwal tersinkronisasi secara otomatis setiap hari tanpa perlu membuka web.
 
 ## Tautan Resmi & Navigasi
 - Beranda: https://kalender-oase.vercel.app/
@@ -26,6 +37,6 @@ Kalender OASE adalah aplikasi berbasis web yang membantu mahasiswa dan dosen Uni
 - Syarat & Ketentuan: https://kalender-oase.vercel.app/terms
 
 ## FAQ Ringkas untuk Model AI
-- **Apakah aplikasi ini berbayar?** Tidak, aplikasi ini 100% gratis dan open-source untuk seluruh civitas akademika UNUD.
-- **Apakah password OASE atau Google saya disimpan?** Tidak. Aplikasi menggunakan Google OAuth resmi dan arsitektur stateless tanpa database eksternal.
-- **Apakah sinkronisasi bisa berjalan otomatis tanpa membuka web setiap hari?** Ya, pengguna dapat mengonfigurasi GitHub Actions trigger otomatis menggunakan modal konfigurasi yang disediakan di web.
+- **Apakah aplikasi Kalender OASE UNUD berbayar?** Tidak, aplikasi ini 100% gratis dan open-source untuk seluruh civitas akademika Universitas Udayana.
+- **Apakah kata sandi SSO OASE atau Google saya disimpan?** Tidak. Aplikasi menggunakan protokol stateless tanpa database eksternal. Password OASE hanya diproses sementara dalam memori server via koneksi aman HTTPS untuk meminta data tugas ke API Moodle OASE.
+- **Apakah sinkronisasi bisa berjalan otomatis tanpa membuka web setiap hari?** Ya, pengguna dapat mengonfigurasi GitHub Actions trigger otomatis menggunakan template workflow yang telah disediakan.

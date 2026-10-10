@@ -20,21 +20,27 @@ const baseUrl = getBaseUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Kalender OASE | Universitas Udayana",
-    template: "%s | Kalender OASE",
+    default:
+      "OASE UNUD — Kalender & Sinkronisasi Tugas OASE Moodle Universitas Udayana",
+    template: "%s | Kalender OASE UNUD",
   },
   description:
-    "Sinkronisasi otomatis jadwal perkuliahan, tenggat waktu tugas, kuis, dan ujian dari portal OASE Moodle Universitas Udayana ke Google Calendar dengan sekali klik.",
+    "Portal sinkronisasi jadwal OASE UNUD ke Google Calendar. Ambil daftar tugas kuliah dari OASE Universitas Udayana secara otomatis.",
   keywords: [
-    "Kalender OASE",
+    "OASE",
     "OASE UNUD",
     "OASE Universitas Udayana",
+    "Kalender OASE",
+    "Portal OASE",
+    "Moodle OASE",
+    "OASE Moodle UNUD",
     "Google Calendar OASE",
     "Sync OASE ke Google Calendar",
     "Kalender Akademik UNUD",
-    "Moodle iCal Export UNUD",
+    "Jadwal Tugas OASE",
+    "Deadline OASE",
     "Informatika UNUD",
-    "Jadwal Kuliah Udayana",
+    "SSO UNUD",
   ],
   authors: [{ name: "Informatika Universitas Udayana" }],
   creator: "Civitas Akademika Universitas Udayana",
@@ -44,11 +50,11 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Kalender OASE | Universitas Udayana",
+    title: "OASE UNUD — Kalender & Sinkronisasi Tugas OASE Moodle",
     description:
-      "Hubungkan dan sinkronkan agenda OASE Moodle UNUD ke Google Calendar Anda secara instan dan otomatis.",
+      "Hubungkan dan sinkronkan tugas, deadline, dan kuis OASE Moodle UNUD ke Google Calendar Anda secara instan dan otomatis.",
     url: baseUrl,
-    siteName: "Kalender OASE",
+    siteName: "Kalender OASE UNUD",
     locale: "id_ID",
     type: "website",
     images: [
@@ -62,7 +68,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Kalender OASE | Universitas Udayana",
+    title: "OASE UNUD — Kalender & Sinkronisasi Tugas OASE Moodle",
     description:
       "Sinkronisasi jadwal tugas, kuis, dan ujian dari OASE UNUD ke Google Calendar.",
     images: ["/logo.webp"],
@@ -97,10 +103,18 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Kalender OASE",
+    name: "Kalender OASE UNUD",
+    alternateName: [
+      "OASE",
+      "OASE UNUD",
+      "Kalender OASE",
+      "OASE Moodle",
+      "OASE Calendar",
+      "OASE Universitas Udayana",
+    ],
     url: baseUrl,
     description:
-      "Aplikasi utilitas akademik untuk menyinkronkan jadwal perkuliahan dari OASE Moodle Universitas Udayana ke Google Calendar.",
+      "Aplikasi akademik untuk menyinkronkan jadwal tugas kuliah dari OASE Universitas Udayana ke Google Calendar.",
     applicationCategory: "EducationalApplication",
     operatingSystem: "All",
     browserRequirements: "Requires JavaScript. Requires HTML5.",
@@ -108,6 +122,12 @@ export default function RootLayout({
       "@type": "Offer",
       price: "0",
       priceCurrency: "IDR",
+    },
+    provider: {
+      "@type": "Organization",
+      name: "Universitas Udayana",
+      alternateName: "UNUD",
+      url: "https://www.unud.ac.id",
     },
   };
 
